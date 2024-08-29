@@ -2,7 +2,14 @@ import React from "react";
 
 const ContentRoot = () => {
   return (
-    <div className="p-4 text-7xl">
+    <div
+      style={{
+        padding: 24,
+        textAlign: "center",
+        backgroundColor: "#fff",
+      }}
+      className="p-4 text-7xl"
+    >
       Lorem ipsum dolor sit amet consectetur adipisicing elit. In illum aliquam
       alias sint laboriosam natus aliquid minus itaque tempore optio a autem,
       dignissimos vitae culpa deleniti porro aut? Labore repellendus officia
