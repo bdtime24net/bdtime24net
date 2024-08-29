@@ -12,6 +12,8 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme, MenuProps } from "antd";
+import TopNavbar from "./TopNavbar";
+import ContentRoot from "./ContentRoot";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -120,34 +122,10 @@ const DashboardRoot: React.FC = () => {
             style={{
               fontSize: "16px",
               width: 64,
-              height: 64,
             }}
           />
-          <div
-            style={{
-              float: "right",
-            }}
-          >
-            <Button
-              type="text"
-              icon={<UserOutlined />}
-              style={{
-                fontSize: "16px",
-                width: 64,
-                height: 64,
-              }}
-            />
-            <Button
-              type="text"
-              icon={<UserOutlined />}
-              style={{
-                fontSize: "16px",
-                width: 64,
-                height: 64,
-              }}
-            />
-          </div>
         </Header>
+        <TopNavbar />
         <Content
           style={{
             margin: "24px 16px",
@@ -157,7 +135,12 @@ const DashboardRoot: React.FC = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          Content
+          <ContentRoot />
+          <Button type="primary">Primary Button</Button>
+          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quia nam a
+          nisi! Dignissimos suscipit neque quae ullam distinctio odio, eligendi
+          quaerat ipsam repudiandae quia, sapiente expedita atque asperiores
+          animi doloribus!
         </Content>
       </Layout>
     </Layout>
