@@ -1,15 +1,62 @@
 "use client";
-import React, { useState } from "react";
+import React, { lazy, useState } from "react";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  ProductFilled,
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
+  AppstoreOutlined,
+  MailOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu, theme } from "antd";
+import { Button, Layout, Menu, theme, MenuProps } from "antd";
 
-const { Header, Sider, Content } = Layout;
+type MenuItem = Required<MenuProps>["items"][number];
+
+const { Header, Sider, Content, Footer } = Layout;
+
+const items: MenuItem[] = [
+  {
+    label: "User Management",
+    key: "1",
+    icon: <UserOutlined />,
+  },
+  {
+    label: "Product Management",
+    key: "2",
+    icon: <ProductFilled />,
+    children: [
+      {
+        label: "Product List",
+        key: "2.1",
+      },
+      {
+        label: "Add Product",
+        key: "2.2",
+      },
+      {
+        label: "Edit Product",
+        key: "2.3",
+      },
+      {
+        type: "group",
+        label: "Group 2",
+        children: [
+          {
+            label: "Option 1",
+            key: "2.4",
+          },
+          {
+            label: "Option 2",
+            key: "2.5",
+          },
+        ],
+      },
+    ],
+  },
+];
 
 const DashboardRoot: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -18,7 +65,7 @@ const DashboardRoot: React.FC = () => {
   } = theme.useToken();
 
   return (
-    <Layout className="h-screen">
+    <Layout className="h-screen" style={{ minHeight: "100vh" }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical" />
         <Menu
@@ -43,6 +90,26 @@ const DashboardRoot: React.FC = () => {
             },
           ]}
         />
+
+        <Menu
+          defaultSelectedKeys={["1"]}
+          defaultOpenKeys={["sub1"]}
+          mode="inline"
+          theme="dark"
+          inlineCollapsed={collapsed}
+          items={items}
+        ></Menu>
+        <Menu mode="inline" theme="dark">
+          <Menu.Item key="1" icon={<ProductFilled />}>
+            nav 1
+          </Menu.Item>
+          <Menu.Item key="2" icon={<ProductFilled />}>
+            nav 2
+          </Menu.Item>
+          <Menu.Item key="3" icon={<ProductFilled />}>
+            nav 3
+          </Menu.Item>
+        </Menu>
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }}>
@@ -56,6 +123,30 @@ const DashboardRoot: React.FC = () => {
               height: 64,
             }}
           />
+          <div
+            style={{
+              float: "right",
+            }}
+          >
+            <Button
+              type="text"
+              icon={<UserOutlined />}
+              style={{
+                fontSize: "16px",
+                width: 64,
+                height: 64,
+              }}
+            />
+            <Button
+              type="text"
+              icon={<UserOutlined />}
+              style={{
+                fontSize: "16px",
+                width: 64,
+                height: 64,
+              }}
+            />
+          </div>
         </Header>
         <Content
           style={{
