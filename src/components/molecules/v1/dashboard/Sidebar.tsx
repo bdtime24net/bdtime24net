@@ -14,12 +14,22 @@ import {
 } from "@heroicons/react/24/outline";
 
 const navigation = [
-  { name: "Home", href: "#", icon: HomeIcon, current: true },
-  { name: "History", href: "#", icon: ClockIcon, current: false },
-  { name: "Balances", href: "#", icon: ScaleIcon, current: false },
-  { name: "Cards", href: "#", icon: CreditCardIcon, current: false },
-  { name: "Recipients", href: "#", icon: UserGroupIcon, current: false },
-  { name: "Reports", href: "#", icon: DocumentCheckIcon, current: false },
+  { name: "Home", href: "/", icon: HomeIcon, current: true },
+  { name: "History", href: "/history", icon: ClockIcon, current: false },
+  { name: "Balances", href: "/balances", icon: ScaleIcon, current: false },
+  { name: "Cards", href: "/cards", icon: CreditCardIcon, current: false },
+  {
+    name: "Recipients",
+    href: "/recipients",
+    icon: UserGroupIcon,
+    current: false,
+  },
+  {
+    name: "Reports",
+    href: "/reports",
+    icon: DocumentCheckIcon,
+    current: false,
+  },
 ];
 
 const secondaryNavigation = [
@@ -68,8 +78,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 leaveTo="opacity-0"
               >
                 <div className="absolute top-0 right-0 -mr-12 pt-2">
-                  <button
-                    type="button"
+                  <div
                     className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                     onClick={() => setSidebarOpen(false)}
                   >
@@ -78,7 +87,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                       className="h-6 w-6 text-white"
                       aria-hidden="true"
                     />
-                  </button>
+                  </div>
                 </div>
               </Transition.Child>
               <div className="flex-shrink-0 flex items-center px-4">

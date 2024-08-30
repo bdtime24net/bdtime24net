@@ -1,3 +1,3 @@
-import Dashboard from "@/components/pages/Dashboard";
+import DashboardRoot from "@/components/pages/Dashboard/DashboardRoot";
 
-export default Dashboard;
+export default DashboardRoot;
