@@ -1,14 +1,35 @@
+"use client";
+
 import {
   Bars3BottomLeftIcon,
   BellIcon,
   MagnifyingGlassCircleIcon,
 } from "@heroicons/react/16/solid";
+import jwt from "jsonwebtoken";
+import { useEffect, useState } from "react";
+
+interface User {
+  fullname: string;
+  avatar_url: string;
+}
 
 export default function Header({
   setSidebarOpen,
 }: {
   setSidebarOpen: (open: boolean) => void;
 }) {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    // Retrieve the token from local storage (or wherever you store it)
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      // Decode the token without verifying the signature
+      const decodedToken = jwt.decode(token) as User | null;
+      setUser(decodedToken);
+    }
+  }, []);
+
   return (
     <header className=" shadow fixed top-0 inset-x-0 lg:pl-64">
       <div className=" mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,13 +60,18 @@ export default function Header({
               <BellIcon className="h-6 w-6" aria-hidden="true" />
               <span className="sr-only">Notifications</span>
             </button>
-            <button>
-              <img
-                className="h-8 w-8 rounded-full"
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                alt=""
-              />
-            </button>
+            {user && (
+              <div className="flex items-center space-x-2">
+                <span className="text-gray-700">{user.fullname}</span>
+                <picture>
+                  <img
+                    className="h-8 w-8 rounded-full"
+                    src={user.avatar_url}
+                    alt={user.fullname}
+                  />
+                </picture>
+              </div>
+            )}
           </div>
         </div>
       </div>

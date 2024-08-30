@@ -18,9 +18,6 @@ export default function Dashboard() {
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
             <ChartSection />
             <ChartSection />
-            <ChartSection />
-            <ChartSection />
-            <ChartSection />
             <SummaryCard
               title="Recent Activity"
               value="5 New Messages"
