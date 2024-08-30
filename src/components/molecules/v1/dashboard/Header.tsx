@@ -10,7 +10,7 @@ export default function Header({
   setSidebarOpen: (open: boolean) => void;
 }) {
   return (
-    <header className="bg-white shadow fixed top-0 inset-x-0 lg:pl-64 z-10">
+    <header className=" shadow fixed top-0 inset-x-0 lg:pl-64">
       <div className=" mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <button

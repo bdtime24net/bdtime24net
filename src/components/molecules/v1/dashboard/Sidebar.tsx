@@ -1,42 +1,8 @@
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import {
-  HomeIcon,
-  ClockIcon,
-  ScaleIcon,
-  CreditCardIcon,
-  UserGroupIcon,
-  DocumentCheckIcon,
-  CogIcon,
-  QuestionMarkCircleIcon,
-  ShieldCheckIcon,
-} from "@heroicons/react/24/outline";
-
-const navigation = [
-  { name: "Home", href: "/", icon: HomeIcon, current: true },
-  { name: "History", href: "/history", icon: ClockIcon, current: false },
-  { name: "Balances", href: "/balances", icon: ScaleIcon, current: false },
-  { name: "Cards", href: "/cards", icon: CreditCardIcon, current: false },
-  {
-    name: "Recipients",
-    href: "/recipients",
-    icon: UserGroupIcon,
-    current: false,
-  },
-  {
-    name: "Reports",
-    href: "/reports",
-    icon: DocumentCheckIcon,
-    current: false,
-  },
-];
-
-const secondaryNavigation = [
-  { name: "Settings", href: "#", icon: CogIcon },
-  { name: "Help", href: "#", icon: QuestionMarkCircleIcon },
-  { name: "Privacy", href: "#", icon: ShieldCheckIcon },
-];
+import SidebarMenu from "./SidebarMenu";
+import SecondaryNavigation from "./SecondaryNavigation";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -91,108 +57,43 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 </div>
               </Transition.Child>
               <div className="flex-shrink-0 flex items-center px-4">
-                <img
-                  className="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/easywire-logo-cyan-300-mark-white-text.svg"
-                  alt="Easywire logo"
-                />
+                <h1 className="text-3xl font-bold ">Easywire</h1>
               </div>
               <nav
                 className="mt-5 flex-shrink-0 h-full divide-y divide-cyan-800 overflow-y-auto"
                 aria-label="Sidebar"
               >
                 <div className="px-2 space-y-1">
-                  {navigation.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className={classNames(
-                        item.current
-                          ? "bg-cyan-800 text-white"
-                          : "text-cyan-100 hover:text-white hover:bg-cyan-600",
-                        "group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                      )}
-                      aria-current={item.current ? "page" : undefined}
-                    >
-                      <item.icon
-                        className="mr-4 flex-shrink-0 h-6 w-6 text-cyan-200"
-                        aria-hidden="true"
-                      />
-                      {item.name}
-                    </a>
-                  ))}
+                  <SidebarMenu />
                 </div>
                 <div className="mt-6 pt-6">
                   <div className="px-2 space-y-1">
-                    {secondaryNavigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
-                      >
-                        <item.icon
-                          className="mr-4 h-6 w-6 text-cyan-200"
-                          aria-hidden="true"
-                        />
-                        {item.name}
-                      </a>
-                    ))}
+                    <SecondaryNavigation />
                   </div>
                 </div>
               </nav>
             </div>
           </Transition.Child>
           <div className="flex-shrink-0 w-14" aria-hidden="true">
-            {/* Dummy element to force sidebar to shrink to fit close icon */}
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptates
+            aperiam dicta ducimus sed, quam placeat a ex eveniet voluptate
+            officiis deleniti tempore veritatis perspiciatis corrupti libero
+            earum accusamus facilis alias.
           </div>
         </Dialog>
       </Transition.Root>
 
       {/* Sidebar for large screens */}
       <div className="hidden lg:flex lg:flex-shrink-0 lg:w-64">
-        <div className="flex flex-col h-full w-64 fixed inset-y-0 bg-cyan-700">
+        <div className="flex flex-col h-full w-64 fixed inset-y-0">
           <div className="flex-shrink-0 flex items-center px-4 py-6">
-            <img
-              className="h-8 w-auto"
-              src="https://tailwindui.com/img/logos/easywire-logo-cyan-300-mark-white-text.svg"
-              alt="Easywire logo"
-            />
+            <h1 className="text-3xl font-bold ">Easywire</h1>
           </div>
           <nav className="flex-1 px-2 pb-4 space-y-1 overflow-y-auto">
-            {navigation.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className={classNames(
-                  item.current
-                    ? "bg-cyan-800 text-white"
-                    : "text-cyan-100 hover:text-white hover:bg-cyan-600",
-                  "group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                )}
-                aria-current={item.current ? "page" : undefined}
-              >
-                <item.icon
-                  className="mr-4 h-6 w-6 text-cyan-200"
-                  aria-hidden="true"
-                />
-                {item.name}
-              </a>
-            ))}
+            <SidebarMenu />
           </nav>
           <div className="mt-auto px-2 space-y-1">
-            {secondaryNavigation.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
-              >
-                <item.icon
-                  className="mr-4 h-6 w-6 text-cyan-200"
-                  aria-hidden="true"
-                />
-                {item.name}
-              </a>
-            ))}
+            <SecondaryNavigation />
           </div>
         </div>
       </div>
