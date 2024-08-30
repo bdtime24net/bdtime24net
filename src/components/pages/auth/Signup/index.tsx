@@ -3,30 +3,36 @@ import React, { useState } from "react";
 import { Button, notification } from "antd";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import useSignupFetchData from "@/hooks/useSignupFetchData";
 
 const AuthSignUp: React.FC = () => {
   const [formData, setFormData] = useState({
+    fullname: "",
     username: "",
     email: "",
     password: "",
   });
 
-  const router = useRouter(); // Initialize the router for navigation
+  const router = useRouter();
+  const { signup, loading, error } = useSignupFetchData();
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Sign-up data ->", formData);
 
-    // Here you would typically send the data to your API for processing
-
-    // Success case logic here
-    notification.success({
-      message: "Sign-up Successful",
-      description: "Your account has been created!",
-    });
-
-    // Redirect to the login page or dashboard after successful sign-up
-    router.push("/auth/signin"); // Change "/auth/signin" to your desired route
+    try {
+      await signup(formData);
+      notification.success({
+        message: "Sign-up Successful",
+        description: "Your account has been created!",
+      });
+      router.push("/auth/signin");
+    } catch (error) {
+      notification.error({
+        message: "Sign-up Failed",
+        description:
+          "An error occurred while signing up. Please try again later.",
+      });
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +47,16 @@ const AuthSignUp: React.FC = () => {
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
       >
         <div className="mb-4">
+          <input
+            type="text"
+            id="fullname"
+            name="fullname"
+            required
+            placeholder="Enter your username"
+            value={formData.fullname}
+            onChange={handleInputChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="username"
@@ -101,6 +117,7 @@ const AuthSignUp: React.FC = () => {
           <Button
             type="primary"
             htmlType="submit"
+            loading={loading}
             className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Sign Up

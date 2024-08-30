@@ -7,7 +7,6 @@ import Header from "@/components/molecules/v1/dashboard/Header"; // Update with 
 import Sidebar from "@/components/molecules/v1/dashboard/Sidebar"; // Update with the correct path to your Sidebar component
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import AntdConfigProvider from "@/providers/AntdConfigProvider";
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -38,7 +37,7 @@ export default function DashboardLayout({
             {/* Content */}
             <main className="flex-1">
               <div className="py-6">
-                <div className="px-4 sm:px-6 lg:px-8">{children}</div>
+                <div className="px-4 sm:px-6 lg:px-8">{children}q</div>
               </div>
             </main>
           </div>

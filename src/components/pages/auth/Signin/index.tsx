@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { Button, notification } from "antd";
 import { useRouter } from "next/navigation";
+import useSignInFetchData from "@/hooks/useSignInFetchData";
 
 const AuthSignIn: React.FC = () => {
   const [notice, setNotice] = useState<string>("");
@@ -15,6 +16,7 @@ const AuthSignIn: React.FC = () => {
     otp: "",
   });
   const router = useRouter();
+  const { signIn, loading, error } = useSignInFetchData();
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -25,14 +27,14 @@ const AuthSignIn: React.FC = () => {
     return password.length >= 8; // Adjust according to your password policy
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (type === "account") {
       if (!validateEmail(formData.email)) {
         notification.error({
           message: "Login Failed",
-          description: "The combination of email and password is incorrect!",
+          description: "Invalid email format.",
         });
         return;
       }
@@ -40,28 +42,32 @@ const AuthSignIn: React.FC = () => {
       if (!validatePassword(formData.password)) {
         notification.error({
           message: "Login Failed",
-          description: "The combination of email and password is incorrect!",
+          description: "Password must be at least 8 characters long.",
         });
         return;
       }
 
-      // Replace with real authentication logic
-      if (
-        formData.email !== "admin@gmail.com" ||
-        formData.password !== "888888"
-      ) {
-        setTimeout(() => {
-          setNotice("The combination of email and password is incorrect!");
-          setFormData({ email: "", password: "", mobile: "", otp: "" });
-          setAutoLogin(false);
+      const token = await signIn(formData.email, formData.password);
 
-          notification.error({
-            message: "Login Failed",
-            description: "The combination of email and password is incorrect!",
-          });
-        }, 500);
-        return;
+      const authToken = localStorage.getItem("authToken");
+
+      if (token) {
+        notification.success({
+          message: "Login Success",
+          description: "You have successfully logged in!",
+        });
+      } else {
+        notification.error({
+          message: "Login Failed",
+          description: error || "Invalid email or password.",
+        });
       }
+
+      if (authToken) {
+        router.push("/dashboard");
+      }
+
+      return;
     }
 
     if (
@@ -70,27 +76,12 @@ const AuthSignIn: React.FC = () => {
     ) {
       notification.error({
         message: "Login Failed",
-        description: "The combination of mobile and otp is incorrect!",
+        description: "Invalid mobile number or OTP.",
       });
       return;
     }
 
-      // Replace with real authentication logic
-      
-    if (autoLogin) {
-      localStorage.setItem("authToken", "123456");
-    } else {
-      localStorage.removeItem("authToken");
-    }
-
-    setTimeout(() => {
-      router.push("/");
-    }, 500);
-
-    notification.success({
-      message: "Login Success",
-      description: "You have successfully logged in!",
-    });
+    // Add mobile OTP login logic here if needed
   };
 
   const onTabChange = (tabType: "account" | "mobile") => {
@@ -249,18 +240,17 @@ const AuthSignIn: React.FC = () => {
           <button
             type="submit"
             className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            disabled={loading}
           >
-            Login
+            {loading ? "Loading..." : "Sign In"}
           </button>
         </div>
       </form>
 
-      <div className="text-center">
-        <Link
-          href="/auth/signup"
-          className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 mt-4"
-        >
-          Register
+      <div className="text-center mt-4">
+        <p className="text-gray-700">Don ’t have an account?</p>
+        <Link href="/auth/signup" className="text-blue-500 hover:text-blue-800">
+          Sign Up
         </Link>
       </div>
     </div>
