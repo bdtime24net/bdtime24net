@@ -19,22 +19,29 @@ const items: MenuItem[] = [
     icon: <PieChartOutlined />,
     label: <Link href="/dashboard">Dashboard</Link>,
   },
-  { key: "2", icon: <DesktopOutlined />, label: "Option 2" },
-  { key: "3", icon: <ContainerOutlined />, label: "Option 3" },
+  {
+    key: "2",
+    icon: <DesktopOutlined />,
+    label: <Link href="/dashboard/analytics">Analytics</Link>,
+  },
+  {
+    key: "3",
+    icon: <ContainerOutlined />,
+    label: <Link href="/dashboard/blocks">Blocks</Link>,
+  },
   {
     key: "sub1",
     label: "Pages",
     icon: <MailOutlined />,
     children: [
-      { key: "5", label: <Link href="/dashboard/posts">Posts</Link> },
-      { key: "6", label: "Option 6" },
-      { key: "7", label: "Option 7" },
-      { key: "8", label: "Option 8" },
+      { key: "5", label: <Link href="/dashboard/pages/news">News</Link> }, // TODO: Add News Page
+      { key: "6", label: <Link href="/dashboard/pages/topics">Topics</Link> },
+      { key: "7", label: <Link href="/dashboard/pages/tags">Tags</Link> },
     ],
   },
   {
     key: "sub2",
-    label: "Navigation Two",
+    label: "Categories",
     icon: <AppstoreOutlined />,
     children: [
       { key: "9", label: "Option 9" },

@@ -47,15 +47,15 @@ const items = [
   {
     key: "sub2",
     icon: <AppstoreOutlined />,
-    label: "Navigation Two",
+    label: "Applications",
     children: [
       {
         key: "5",
-        label: "Option 5",
+        label: <Link href="/dashboard/app/data-tables">Data Tables</Link>,
       },
       {
         key: "6",
-        label: "Option 6",
+        label: <Link href="/dashboard/app/calendar">Calendar</Link>,
       },
       {
         key: "sub3",

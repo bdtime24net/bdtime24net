@@ -87,7 +87,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
       <div className="hidden lg:flex lg:flex-shrink-0 lg:w-64">
         <div className="flex flex-col h-full w-64 fixed inset-y-0">
           <div className="flex-shrink-0 flex items-center px-4 py-6">
-            <h1 className="text-3xl font-bold ">Easywire</h1>
+            <h1 className="text-3xl font-bold">bdtime24.net</h1>
           </div>
           <nav className="flex-1 px-2 pb-4 space-y-1 overflow-y-auto">
             <SidebarMenu />
