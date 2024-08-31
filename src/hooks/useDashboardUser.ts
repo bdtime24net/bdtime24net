@@ -2,20 +2,13 @@ import { useEffect, useState } from "react";
 import jwt from "jsonwebtoken";
 import { useRouter } from "next/navigation";
 
-interface UserProfile {
+interface UserDashboard {
   fullname: string;
   username: string;
   email: string;
   role: string;
   avatar_url: string;
-  html_url: string;
-  bio: string;
-  location: string;
-  linkedin_url: string;
-  twitter_url: string;
-  website_url: string;
-  followers: string;
-  following: string;
+  // Add other user fields as needed
 }
 
 interface DecodedToken {
@@ -24,19 +17,19 @@ interface DecodedToken {
   // Add other fields from the token if necessary
 }
 
-export function useUser() {
-  const [user, setUser] = useState<UserProfile | null>(null);
+export function useDashboardUser() {
+  const [user, setUser] = useState<UserDashboard | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
   const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const authToken = localStorage.getItem("authToken");
+
         if (!authToken) {
-          setLoading(false);
+          router.push("/auth/signin");
           return;
         }
 
@@ -63,7 +56,7 @@ export function useUser() {
           throw new Error("Failed to fetch user profile");
         }
 
-        const userData: UserProfile = await response.json();
+        const userData: UserDashboard = await response.json();
         setUser(userData);
       } catch (err) {
         setError((err as Error).message);

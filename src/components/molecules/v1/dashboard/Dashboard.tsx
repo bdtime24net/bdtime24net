@@ -1,10 +1,22 @@
 "use client";
+import { useRouter } from "next/navigation";
+import { useDashboardUser } from "@/hooks/useDashboardUser";
 import MainContent from "./MainContent";
 import BlockCount from "./BlockCount";
 import ChartSection from "./ChartSection";
 import SummaryCard from "./SummaryCard";
 
 export default function Dashboard() {
+  const router = useRouter();
+  const { user, loading } = useDashboardUser();
+
+  if (loading) return <div>Loading...</div>;
+
+  if (!user) {
+    router.push("/auth/signin");
+    return null;
+  }
+
   return (
     <div className="flex overflow-hidden bg-gray-100">
       <div className="flex flex-col flex-1 w-0">

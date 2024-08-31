@@ -1,15 +1,18 @@
 "use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 import { useUser } from "@/hooks/useUser";
 
 const Profile: React.FC = () => {
-  const { user, loading, error } = useUser();
+  const router = useRouter();
+  const { user, loading } = useUser();
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <div>Loading...</div>;
 
-  if (!user) return <p>No user data found</p>;
-
+  if (!user) {
+    router.push("/auth/signin");
+    return null;
+  }
   return (
     <div className="p-4">
       <div className="max-w-md mx-auto bg-black rounded-xl shadow-md overflow-hidden md:max-w-2xl">
