@@ -63,9 +63,13 @@ const AuthSignIn: React.FC = () => {
         });
       }
 
+      setTimeout(() => {
+        
       if (authToken) {
         router.push("/dashboard");
       }
+
+      }, 2000);
 
       return;
     }
@@ -121,7 +125,7 @@ const AuthSignIn: React.FC = () => {
 
       <form
         onSubmit={onSubmit}
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        className=" shadow-md rounded px-8 pt-6 pb-8 mb-4"
       >
         {notice && (
           <div className="mb-4 text-red-600 text-center">{notice}</div>

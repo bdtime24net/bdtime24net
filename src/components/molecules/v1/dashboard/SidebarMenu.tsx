@@ -27,7 +27,7 @@ const items: MenuItem[] = [
   {
     key: "3",
     icon: <ContainerOutlined />,
-    label: <Link href="/dashboard/blocks">Blocks</Link>,
+    label: <Link href="/dashboard/news-list">News List</Link>,
   },
   {
     key: "sub1",
