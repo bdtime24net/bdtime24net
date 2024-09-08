@@ -1,7 +1,7 @@
 // hooks/useSignupFetchData.ts
 import { useState } from "react";
 
-const NEXT_PUBLIC_SIGNUP_URL = process.env.NEXT_PUBLIC_SIGNUP_URL as string;
+const NEXT_PUBLIC_SIGNUP_URL = process.env.NEXT_PUBLIC_URL as string; 
 
 interface SignupFormData {
   username: string;
@@ -18,13 +18,17 @@ const useSignupFetchData = () => {
     setError(null);
 
     try {
-      const response = await fetch(NEXT_PUBLIC_SIGNUP_URL, {
+      const response = await fetch(`${NEXT_PUBLIC_SIGNUP_URL}/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
+
+      console.log("Signup URL:", NEXT_PUBLIC_SIGNUP_URL);
+
+      console.log("Response:", response);
 
       if (!response.ok) {
         throw new Error("Failed to sign up");

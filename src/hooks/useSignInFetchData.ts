@@ -1,6 +1,9 @@
 // src/hooks/useSignInFetchData.ts
 import { useState } from "react";
 
+const NEXT_PUBLIC_SIGNIN_URL = process.env.NEXT_PUBLIC_URL as string;
+
+
 const useSignInFetchData = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -11,7 +14,7 @@ const useSignInFetchData = () => {
 
     try {
       const response = await fetch(
-        "https://message-aether.onrender.com/api/auth/login",
+        `${NEXT_PUBLIC_SIGNIN_URL}/api/auth/signin`,
         {
           method: "POST",
           headers: {

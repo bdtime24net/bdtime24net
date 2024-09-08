@@ -7,7 +7,6 @@ import useSignupFetchData from "@/hooks/useSignupFetchData";
 
 const AuthSignUp: React.FC = () => {
   const [formData, setFormData] = useState({
-    fullname: "",
     username: "",
     email: "",
     password: "",
@@ -25,6 +24,16 @@ const AuthSignUp: React.FC = () => {
         message: "Sign-up Successful",
         description: "Your account has been created!",
       });
+
+      // Reset form data
+      setFormData({
+        username: "",
+        email: "",
+        password: "",
+      });
+
+      console.log(formData);
+
       router.push("/auth/signin");
     } catch (error) {
       notification.error({
@@ -47,16 +56,6 @@ const AuthSignUp: React.FC = () => {
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
       >
         <div className="mb-4">
-          <input
-            type="text"
-            id="fullname"
-            name="fullname"
-            required
-            placeholder="Enter your username"
-            value={formData.fullname}
-            onChange={handleInputChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="username"
