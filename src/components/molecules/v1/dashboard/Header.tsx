@@ -9,8 +9,9 @@ import jwt from "jsonwebtoken";
 import { useEffect, useState } from "react";
 
 interface User {
-  fullname: string;
-  avatar_url: string;
+  username: string;
+  email: string;
+  role: string;
 }
 
 export default function Header({
@@ -62,12 +63,12 @@ export default function Header({
             </button>
             {user && (
               <div className="flex items-center space-x-2">
-                <span className="text-gray-700">{user.fullname}</span>
+                <h1 className="text-gray-700">{user.username}</h1>
                 <picture>
                   <img
                     className="h-8 w-8 rounded-full"
-                    src={user.avatar_url}
-                    alt={user.fullname}
+                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    alt=""
                   />
                 </picture>
               </div>

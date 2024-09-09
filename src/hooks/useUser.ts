@@ -2,26 +2,16 @@ import { useEffect, useState } from "react";
 import jwt from "jsonwebtoken";
 import { useRouter } from "next/navigation";
 
+
 interface UserProfile {
-  fullname: string;
   username: string;
   email: string;
   role: string;
-  avatar_url: string;
-  html_url: string;
-  bio: string;
-  location: string;
-  linkedin_url: string;
-  twitter_url: string;
-  website_url: string;
-  followers: string;
-  following: string;
 }
 
-interface DecodedToken {
+interface DecodedToken extends UserProfile {
   exp: number;
   iat: number;
-  // Add other fields from the token if necessary
 }
 
 export function useUser() {
@@ -32,39 +22,29 @@ export function useUser() {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUser = () => {
       try {
         const authToken = localStorage.getItem("authToken");
         if (!authToken) {
           setLoading(false);
+          router.push("/auth/signin");
           return;
         }
 
-        const decodedToken: DecodedToken = jwt.decode(
-          authToken
-        ) as DecodedToken;
-
+        const decodedToken = jwt.decode(authToken) as DecodedToken;
+        
         if (decodedToken.exp * 1000 < Date.now()) {
           localStorage.removeItem("authToken");
           router.push("/auth/signin");
           return;
         }
 
-        const response = await fetch(
-          "https://message-aether.onrender.com/api/user/profile",
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch user profile");
-        }
-
-        const userData: UserProfile = await response.json();
-        setUser(userData);
+        // Set user data from the token directly
+        setUser({
+          username: decodedToken.username,
+          email: decodedToken.email,
+          role: decodedToken.role,
+        });
       } catch (err) {
         setError((err as Error).message);
         localStorage.removeItem("authToken");

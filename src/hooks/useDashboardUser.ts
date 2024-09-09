@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import jwt from "jsonwebtoken";
 import { useRouter } from "next/navigation";
 
+
+const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL as string;
+
 interface UserDashboard {
   fullname: string;
   username: string;
@@ -44,7 +47,7 @@ export function useDashboardUser() {
         }
 
         const response = await fetch(
-          "https://message-aether.onrender.com/api/user/profile",
+          `${NEXT_PUBLIC_URL}/api/user/dashboard`,
           {
             headers: {
               Authorization: `Bearer ${authToken}`,

@@ -2,12 +2,19 @@
 import { useState, useEffect } from 'react';
 import { message } from 'antd';
 
+
+const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL as string;
+
 interface Blog {
   id: number;
-  title: string;
-  subtitle: string;
-  image: string;
+  headline: string;
+  url: string;
+  urlToImage:Array<string>;
+  keywords: Array<string>;
   description: string;
+  categoryId: string;
+  userId: string;
+  tagId: string;
   createdAt: string;
 }
 
@@ -19,7 +26,12 @@ const useBlogs = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+        const response = await fetch(`${NEXT_PUBLIC_URL}/api/article`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
