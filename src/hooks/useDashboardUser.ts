@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { useRouter } from "next/navigation";
 
 
-const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL as string;
+const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_API_URL as string;
 
 interface UserDashboard {
   fullname: string;

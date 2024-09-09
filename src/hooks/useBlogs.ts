@@ -1,21 +1,22 @@
 "use client";
+
 import { useState, useEffect } from 'react';
 import { message } from 'antd';
 
-
-const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL as string;
+const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_API_URL as string;
 
 interface Blog {
-  id: number;
+  id: string;
   headline: string;
   url: string;
-  urlToImage:Array<string>;
-  keywords: Array<string>;
+  urlToImage: string[];
+  keywords: string[];
   description: string;
   categoryId: string;
   userId: string;
   tagId: string;
-  createdAt: string;
+  publishedAt: string;
+  updatedAt: string;
 }
 
 const useBlogs = () => {
@@ -31,11 +32,23 @@ const useBlogs = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-        })
+        });
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        const data = await response.json();
+
+        const result = await response.json();
+        console.log('Fetched result:', result); // Debugging line
+
+        // Extract the data array
+        const data = result.data;
+        
+        // Ensure data is an array
+        if (!Array.isArray(data)) {
+          throw new Error('API response data is not an array');
+        }
+
         setBlogs(data);
       } catch (error) {
         setError('Failed to fetch blogs');

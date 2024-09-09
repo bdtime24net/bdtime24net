@@ -1,7 +1,7 @@
 // hooks/useSignupFetchData.ts
 import { useState } from "react";
 
-const NEXT_PUBLIC_SIGNUP_URL = process.env.NEXT_PUBLIC_URL as string; 
+const NEXT_PUBLIC_SIGNUP_URL = process.env.NEXT_PUBLIC_API_URL as string; 
 
 interface SignupFormData {
   username: string;

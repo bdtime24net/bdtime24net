@@ -1,7 +1,7 @@
 // src/hooks/useSignInFetchData.ts
 import { useState } from "react";
 
-const NEXT_PUBLIC_SIGNIN_URL = process.env.NEXT_PUBLIC_URL as string;
+const NEXT_PUBLIC_SIGNIN_URL = process.env.NEXT_PUBLIC_API_URL as string;
 
 
 const useSignInFetchData = () => {
