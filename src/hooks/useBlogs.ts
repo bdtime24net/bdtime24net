@@ -19,15 +19,16 @@ interface Blog {
   updatedAt: string;
 }
 
-const useBlogs = () => {
+const useBlogs = (page: number, pageSize: number) => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [total, setTotal] = useState<number>(0);
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await fetch(`${NEXT_PUBLIC_URL}/api/article`, {
+        const response = await fetch(`${NEXT_PUBLIC_URL}/api/article?page=${page}&limit=${pageSize}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -38,18 +39,10 @@ const useBlogs = () => {
           throw new Error('Network response was not ok');
         }
 
+       
         const result = await response.json();
-        console.log('Fetched result:', result); // Debugging line
-
-        // Extract the data array
-        const data = result.data;
-        
-        // Ensure data is an array
-        if (!Array.isArray(data)) {
-          throw new Error('API response data is not an array');
-        }
-
-        setBlogs(data);
+        setBlogs(result.data);
+        setTotal(result.totalCount); // Total number of items
       } catch (error) {
         setError('Failed to fetch blogs');
         message.error('Failed to fetch blogs');
@@ -59,9 +52,9 @@ const useBlogs = () => {
     };
 
     fetchBlogs();
-  }, []);
+  }, [page, pageSize]);
 
-  return { blogs, loading, error };
+  return { blogs, loading, error, total };
 };
 
 export default useBlogs;
