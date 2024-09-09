@@ -35,8 +35,26 @@ const items: MenuItem[] = [
     icon: <MailOutlined />,
     children: [
       { key: "5", label: <Link href="/dashboard/pages/news">News</Link> }, // TODO: Add News Page
-      { key: "6", label: <Link href="/dashboard/pages/topics">Topics</Link> },
-      { key: "7", label: <Link href="/dashboard/pages/tags">Tags</Link> },
+      { key: "6", label: "Categories", children: [
+          {
+            key: "8", label: <Link href="/dashboard/categories">List Categories</Link>,
+          },
+          {
+            key: "7", label: <Link href="/dashboard/categories/create">Create Category</Link>,
+          }
+      ] },
+      { key: "7", label: "Tags", children: [
+        {
+          key: "10", label: <Link href="/dashboard/tags">List Tags</Link>,
+         },
+        { 
+        key: "9", label: <Link href="/dashboard/tags/create">Create Tag</Link>,
+       },
+       {
+        key: "11", label: <Link href="/dashboard/tags/create">Edit Tag</Link>,
+       }
+       
+      ] },
     ],
   },
   {
