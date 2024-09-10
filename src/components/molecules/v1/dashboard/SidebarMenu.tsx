@@ -34,7 +34,17 @@ const items: MenuItem[] = [
     label: "Pages",
     icon: <MailOutlined />,
     children: [
-      { key: "5", label: <Link href="/dashboard/pages/news">News</Link> }, // TODO: Add News Page
+      { key: "5", label: "News", children: [
+        {
+          key: "4", label: <Link href="/dashboard/news/create">Create News</Link>,
+        },
+        {
+          key: "3", label: <Link href="/dashboard/news">List News</Link>,
+        }, 
+        {
+          key: "2", label: <Link href="/dashboard/news/create">Edit News</Link>,
+        }
+      ] },
       { key: "6", label: "Categories", children: [
           {
             key: "8", label: <Link href="/dashboard/categories">List Categories</Link>,
