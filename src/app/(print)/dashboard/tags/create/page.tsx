@@ -1,3 +1,5 @@
+// src/app/(print)/dashboard/tags/create/page.tsx
+
 'use client';
 import React, { useState } from 'react';
 import { useUser } from '@/hooks/useUser';
@@ -60,9 +62,10 @@ const TagsForm: React.FC = () => {
           onChange={(e) => setTag(e.target.value)}
           className="mt-1 block w-full"
         />
-        <Button className="mt-2" type="primary" htmlType="submit">
-          Submit Tag
-        </Button>
+      <Button className="mt-2" type="primary" htmlType="submit" disabled={loading}>
+  {loading ? 'Submitting...' : 'Submit Tag'}
+</Button>
+
         {submitError && <p className="text-red-500">{submitError}</p>}
       </div>
     </form>
