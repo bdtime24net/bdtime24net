@@ -1,3 +1,4 @@
+// src/app/news/[id]/page.tsx
 "use client";
 
 import React, { useEffect, useState } from 'react';
@@ -57,7 +58,10 @@ const BlogDetailPage = ({ params }: { params: { id: string } }) => {
           className="w-full h-64 object-cover mb-4"
         />
       )}
-      <p className="text-gray-600">{blog.description}</p>
+      <div
+        className="text-gray-600"
+        dangerouslySetInnerHTML={{ __html: blog.description }}
+      />
       <Link href="/dashboard/news">
         <p className="text-blue-500 hover:underline">Back to news list</p>
       </Link>
