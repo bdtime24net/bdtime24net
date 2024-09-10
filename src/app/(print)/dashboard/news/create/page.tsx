@@ -1,9 +1,3 @@
-import React from 'react'
+import NewsForm from '@/components/molecules/v2/NewsForm';
 
-const page = () => {
-  return (
-    <div>page</div>
-  )
-}
-
-export default page
+export default NewsForm
