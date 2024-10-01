@@ -23,11 +23,13 @@ const News = () => {
           <Link href={`/news/${blog.id}`}>
             <p>
               {blog.urlToImage && blog.urlToImage.length > 0 && (
-                <img
+                <picture>
+                  <img
                   src={blog.urlToImage[0]}
                   alt={blog.headline}
                   className="w-full h-48 object-cover"
                 />
+                </picture>
               )}
               <div className="p-4">
                 <h2 className="text-lg font-semibold mb-2 text-gray-800">{blog.headline}</h2>

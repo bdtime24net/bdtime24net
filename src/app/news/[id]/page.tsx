@@ -52,16 +52,27 @@ const BlogDetailPage = ({ params }: { params: { id: string } }) => {
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-4">{blog.headline}</h1>
       {blog.urlToImage && blog.urlToImage.length > 0 && (
-        <img
+        <picture>
+          <img
           src={blog.urlToImage[0]}
           alt={blog.headline}
-          className="w-full h-64 object-cover mb-4"
+          className="w-5/6 h-64 object-cover mb-4"
         />
+        </picture>
       )}
       <div
         className="text-gray-600"
         dangerouslySetInnerHTML={{ __html: blog.description }}
       />
+      {blog.urlToImage && blog.urlToImage.length > 0 && (
+        <picture>
+          <img
+          src={blog.urlToImage[1]}
+          alt={blog.headline}
+          className="w-5/6 h-64 object-cover mb-4"
+        />
+        </picture>
+      )}
       <Link href="/dashboard/news">
         <p className="text-blue-500 hover:underline">Back to news list</p>
       </Link>
