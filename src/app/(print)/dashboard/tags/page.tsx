@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { Select, message } from 'antd';
+import ApiSearchSelect from '@/components/atoms/ApiSearchSelect';
 
 const { Option } = Select;
 
@@ -40,6 +41,10 @@ const TagsDropdown: React.FC = () => {
     message.success(`Selected Tag ID: ${value}`);
   };
 
+  const handleTagChange2 = (tagId: string) => {
+    console.log('Selected Tag ID:', tagId);
+  };
+
   return (
     <div className="p-6 bg-white shadow-md rounded-md max-w-lg mx-auto">
       <h2 className="text-lg font-medium text-gray-700 mb-4">Select a Tag</h2>
@@ -55,6 +60,8 @@ const TagsDropdown: React.FC = () => {
           </Option>
         ))}
       </Select>
+
+      <ApiSearchSelect onChange={handleTagChange2} />
     </div>
   );
 };
