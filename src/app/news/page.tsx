@@ -31,7 +31,11 @@ const News = () => {
               )}
               <div className="p-4">
                 <h2 className="text-lg font-semibold mb-2 text-gray-800">{blog.headline}</h2>
-                <p className="text-gray-600">{blog.description.slice(0, 100)}...</p>
+               
+                <div
+        className="text-gray-600"
+        dangerouslySetInnerHTML={{ __html: blog.description.slice(0, 100) }}
+      />
                 <span className="text-sm text-blue-500 mt-2 inline-block">Read more</span>
               </div>
             </p>
