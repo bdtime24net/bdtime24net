@@ -1,84 +1,199 @@
+// 'use client';
+// import React, { useState } from 'react';
+// import { MenuOutlined, BellOutlined, SearchOutlined, SettingOutlined } from '@ant-design/icons';
+// import Link from 'next/link';
+
+
+
+// const navData = [
+//   {
+//     id: 1,
+//     en: "latest-news",
+//     bn: 'সর্বশেষ',
+//     path: '/latest-news'
+//   },
+//   {
+//     id: 2,
+//     en: "national",
+//     bn: 'জাতীয়',
+//     path: '/national'
+//   },
+//   {
+//     id: 3,
+//     en: "politics",
+//     bn: 'রাজনীতি',
+//     path: '/politics'
+//   },
+//   {
+//     id: 4,
+//     en: "economy",
+//     bn: 'অর্থনীতি',
+//     path: '/economy'
+//   },
+//   {
+//     id: 5,
+//     en: "international",
+//     bn: 'আন্তর্জাতিক',
+//     path: '/international'
+//   },
+//   {
+//     id: 6,
+//     en: "sports",
+//     bn: 'খেলা',
+//     path: '/sports'
+//   },
+//   {
+//     id: 7,
+//     en: "entertainment",
+//     bn: 'বিনোদন',
+//     path: '/entertainment'
+//   },
+//   {
+//     id: 8,
+//     en: "jobs-career",
+//     bn: 'কার্যক্রিয়া',
+//     path: '/jobs-career'
+//   }
+// ]
+
+
+// const TopNavbar = () => {
+//   const [searchOpen, setSearchOpen] = useState(false);
+
+//   return (
+//     <nav className="flex items-center justify-between p-4 shadow-md bg-white">
+//       {/* Logo */}
+//       <div className="flex items-center space-x-4">
+//         <div className="text-xl font-bold">LOGO</div>
+//         {/* Menu Links */}
+//         <div className="hidden md:flex space-x-6">
+//           {navData.map((item) => (
+//             <Link key={item.id} href={item.path}>
+//               <p className="text-gray-700 hover:text-blue-500 capitalize">{item.en}</p>
+//             </Link>
+//           ))}
+//         </div>
+//       </div>
+
+//       {/* Icons */}
+//       <div className="flex items-center space-x-4">
+//         <SearchOutlined
+//           className="text-xl cursor-pointer"
+//           onClick={() => setSearchOpen(!searchOpen)}
+//         />
+//         <BellOutlined className="text-xl cursor-pointer" />
+//         <SettingOutlined className="text-xl cursor-pointer" />
+//         <MenuOutlined className="text-xl cursor-pointer md:hidden" />
+//       </div>
+
+//       {/* Search Box (conditionally rendered) */}
+//       {searchOpen && (
+//         <div className="absolute top-16 right-4 w-72 bg-white shadow-md p-4 rounded-md">
+//           <input
+//             type="text"
+//             placeholder="Search..."
+//             className="w-full border border-gray-300 rounded-md p-2"
+//           />
+//         </div>
+//       )}
+//     </nav>
+//   );
+// };
+
+// export default TopNavbar;
+
 'use client';
-import React, { useState } from 'react';
 
-const TopNavbar = () => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+import React, { useState, useEffect } from 'react';
+import { MenuOutlined, BellOutlined, SearchOutlined, SettingOutlined } from '@ant-design/icons';
+import RightDrawerNavigation from './RightDrawerNavigation';
+import Link from 'next/link';
+import clsx from 'clsx';
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
+const navData = [
+  { id: 1, en: "latest-news", path: '/latest-news' },
+  { id: 2, en: "national", path: '/national' },
+  { id: 3, en: "politics", path: '/politics' },
+  { id: 4, en: "economy", path: '/economy' },
+  { id: 5, en: "international", path: '/international' },
+  { id: 6, en: "sports", path: '/sports' },
+  { id: 7, en: "entertainment", path: '/entertainment' },
+  { id: 8, en: "jobs-career", path: '/jobs-career' }
+];
+
+const TopNavbar: React.FC = () => {
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Add scroll event to change navbar style
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
-    <div>
-      <nav className="bg-white border-gray-200 dark:bg-gray-900">
-        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <a href="https://flowbite.com/" className="flex items-center space-x-3">
-            <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="Flowbite Logo" />
-            <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
-          </a>
-          <div className="flex items-center md:order-2">
-            <button
-              type="button"
-              onClick={toggleDropdown}
-              className="inline-flex items-center justify-center px-4 py-2 text-sm text-gray-900 dark:text-white rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              <svg className="w-5 h-5 rounded-full me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3900 3900">
-                <path fill="#b22234" d="M0 0h7410v3900H0z" />
-                <path d="M0 450h7410m0 600H0m0 600h7410m0 600H0m0 600h7410m0 600H0" stroke="#fff" strokeWidth="300" />
-                <path fill="#3c3b6e" d="M0 0h2964v2100H0z" />
-                <g fill="#fff">
-                  <path d="M247 90l70.534 217.082-184.66-134.164h228.253L176.466 307.082z" />
-                </g>
-              </svg>
-              English (US)
-            </button>
-            {dropdownOpen && (
-              <div className="z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700">
-                <ul className="py-2 font-medium" role="none">
-                  <li>
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white">
-                      <div className="inline-flex items-center">
-                        <svg className="h-3.5 w-3.5 rounded-full me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                          <g fillRule="evenodd">
-                            <path fill="#b22234" d="M0 0h247v10H0z" />
-                            <path fill="#fff" d="M0 10h247v10H0z" />
-                            <path fill="#192f5d" d="M0 0h98.8v70H0z" />
-                          </g>
-                        </svg>
-                        English (US)
-                      </div>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white">
-                      <div className="inline-flex items-center">
-                        <svg className="h-3.5 w-3.5 rounded-full me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                          <path fill="#ffce00" d="M0 341.3h512V512H0z" />
-                          <path d="M0 0h512v170.7H0z" />
-                          <path fill="#d00" d="M0 170.7h512v170.6H0z" />
-                        </svg>
-                        Deutsch
-                      </div>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white">
-                      <div className="inline-flex items-center">
-                        <svg className="h-3.5 w-3.5 rounded-full me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                          <path fill="#009246" d="M0 0h170.7v512H0z" />
-                          <path fill="#ce2b37" d="M341.3 0H512v512H341.3z" />
-                        </svg>
-                        Italiano
-                      </div>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
+    <nav
+      className={clsx(
+        'fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 shadow-md transition-all duration-300',
+        isScrolled ? 'bg-white/70 backdrop-blur-md' : 'bg-transparent'
+      )}
+    >
+      {/* Logo */}
+      <div className="flex items-center space-x-4">
+        <div className="text-xl font-bold">LOGO</div>
+        {/* Menu Links */}
+        <div className="hidden md:flex space-x-6">
+          {navData.map((item) => (
+            <Link key={item.id} href={item.path}>
+              <p className="text-gray-700 hover:text-blue-500 capitalize">{item.en}</p>
+            </Link>
+          ))}
         </div>
-      </nav>
-    </div>
+      </div>
+
+      {/* Icons */}
+      <div className="flex items-center space-x-4">
+        <SearchOutlined
+          className="text-xl cursor-pointer"
+          onClick={() => setSearchOpen(!searchOpen)}
+        />
+        <BellOutlined className="text-xl cursor-pointer" />
+        <SettingOutlined className="text-xl cursor-pointer" />
+        {/* Menu button for mobile */}
+        <MenuOutlined
+          className="text-xl cursor-pointer md:hidden"
+          onClick={() => setDrawerOpen(true)}
+        />
+      </div>
+
+      {/* Search Box (conditionally rendered) */}
+      {searchOpen && (
+        <div className="absolute top-16 right-4 w-72 bg-white shadow-md p-4 rounded-md">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="w-full border border-gray-300 rounded-md p-2"
+          />
+        </div>
+      )}
+
+      {/* Right Drawer Navigation */}
+      <RightDrawerNavigation
+        isOpen={isDrawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
+    </nav>
   );
 };
 

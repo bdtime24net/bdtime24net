@@ -22,7 +22,10 @@ export default async function RootLayout({
         <main>
           <div>
             <TopNavbar />
-            {children}</div>
+            <main className="flex-grow container mx-auto px-4 pt-20">
+              {children}
+            </main>
+          </div>
         </main>
       </body>
     </html>
