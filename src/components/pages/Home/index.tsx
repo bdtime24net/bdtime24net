@@ -1,15 +1,14 @@
-'use client';
-import React from "react";
-import SlideNavigation from "./SlideNavigation";
-import { Layout } from "antd";
-import TopNavbar from "./TopNavbar";
-
-const Home: React.FC = () => {
+import React from 'react'
+import TopNavbar from './TopNavbar'
+import RightDrawerNavigation from './RightDrawerNavigation'
+const index = () => {
   return (
-    <Layout>
-    <TopNavbar />
-  </Layout>
+    <div>
+      
+      <RightDrawerNavigation />
+  
+    </div>
   )
-};
+}
 
-export default Home;
+export default index
