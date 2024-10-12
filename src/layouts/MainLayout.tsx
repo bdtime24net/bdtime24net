@@ -21,7 +21,7 @@ export default async function RootLayout({
       <body className={inter.className}>
         <main>
           <div>
-            
+            <TopNavbar />
             <main className="flex-grow container mx-auto px-4 pt-20">
               {children}
             </main>
