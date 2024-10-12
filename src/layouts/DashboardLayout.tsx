@@ -24,6 +24,8 @@ export default function DashboardLayout({
 
   return (
     <>
+    <html lang="en">
+      <body className={inter.className}>
       <AntdConfigProvider>
         <AntdRegistry>
           {/* Sidebar component */}
@@ -43,6 +45,9 @@ export default function DashboardLayout({
           </div>
         </AntdRegistry>
       </AntdConfigProvider>
+      </body>
+    </html>
+      
     </>
   );
 }
