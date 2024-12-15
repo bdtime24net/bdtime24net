@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import newsData from '@/data/homeNews.json'; // Adjust the path as necessary
 
