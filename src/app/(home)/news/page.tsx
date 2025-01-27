@@ -1,51 +1,85 @@
-"use client";
 
-import React from 'react';
-import useBlogs from '@/hooks/useBlogs';
-import Link from 'next/link';
-import { Spin, message } from 'antd';
+// app/news/page.tsx
+import { getAllPosts } from "@/hooks/news/useNews";
+import Link from "next/link";
+import Image from "next/image";
+import { formatDistanceToNow } from 'date-fns';
 
-const News = () => {
-  const pageSize = 10; // Number of blogs per page
-  const { blogs, loading, error } = useBlogs(1, pageSize); // Fetch blogs with pagination
+export default async function NewsPage() {
+  const newsData = await getAllPosts();
 
-  if (loading) return <Spin size="large" className="flex justify-center mt-10" />;
-
-  if (error) {
-    message.error('Failed to fetch blogs');
-    return null;
+  if (!newsData.articles.length) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-6">News</h1>
+        <p className="text-red-500">No articles available</p>
+      </div>
+    );
   }
 
   return (
-    <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {blogs.map(blog => (
-        <div key={blog.id} className="border border-gray-200 rounded-lg shadow-md overflow-hidden">
-          <Link href={`/news/${blog.id}`}>
-            <p>
-              {blog.urlToImage && blog.urlToImage.length > 0 && (
-                <picture>
-                  <img
-                  src={blog.urlToImage[0]}
-                  alt={blog.headline}
-                  className="w-full h-48 object-cover"
-                />
-                </picture>
-              )}
-              <div className="p-4">
-                <h2 className="text-lg font-semibold mb-2 text-gray-800">{blog.headline}</h2>
-               
-                <div
-        className="text-gray-600"
-        dangerouslySetInnerHTML={{ __html: blog.description.slice(0, 100) }}
-      />
-                <span className="text-sm text-blue-500 mt-2 inline-block">Read more</span>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-6">News</h1>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {newsData.articles.map((article) => (
+          <article key={article._id} className="border rounded-lg overflow-hidden shadow-lg">
+            <div className="relative h-48">
+              {/* <Image
+                src={article.imageUrl}
+                alt={article.title}
+                fill
+                className="object-cover"
+              /> */}
+            </div>
+            <div className="p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                  {article.category}
+                </span>
+                <span className="text-gray-500 text-sm">
+                  {formatDistanceToNow(new Date(article.createdAt), { addSuffix: true })}
+                </span>
               </div>
-            </p>
+              <Link href={`/news/${article._id}`}>
+                <h2 className="text-xl font-bold mb-2 hover:text-blue-600">
+                  {article.title}
+                </h2>
+              </Link>
+              <p className="text-gray-600 text-sm mb-4">
+                {article.subtitle}
+              </p>
+              <div className="flex items-center justify-between text-sm text-gray-500">
+                <div className="flex items-center gap-4">
+                  <span>👁 {article.views}</span>
+                  <span>❤️ {article.likes}</span>
+                  <span>💬 {article.commentsCount}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>{article.location}</span>
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div className="mt-8 flex justify-center gap-4">
+        {newsData.prevPage && (
+          <Link 
+            href={`/news?page=${newsData.prevPage}`}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Previous
           </Link>
-        </div>
-      ))}
+        )}
+        {newsData.nextPage && (
+          <Link 
+            href={`/news?page=${newsData.nextPage}`}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Next
+          </Link>
+        )}
+      </div>
     </div>
   );
-};
-
-export default News;
+}

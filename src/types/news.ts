@@ -1,13 +1,18 @@
-export interface INews {
-    id: string;
-    headline: string;
-    url: string;
-    urlToImage: string[];
-    keywords: string[];
-    description: string;
-    categoryId: string;
-    userId: string;
-    tagId: string;
-    publishedAt: string;
-    updatedAt: string;
+export interface NewsArticle {
+  _id: string;
+  title: string;
+  subtitle: string;
+  location: string;
+  category: string;
+  description: string;
+  content: string;
+  authorId: string;
+  imageUrl: string;
+  link: string;
+  tags: string[];
+  views: number;
+  likes: number;
+  commentsCount: number;
+  createdAt: string;
+  updatedAt: string;
   }

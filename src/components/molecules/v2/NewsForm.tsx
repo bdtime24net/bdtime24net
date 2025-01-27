@@ -4,8 +4,8 @@ import { Input, Button, message } from 'antd';
 import TagsDropdown from '@/components/atoms/TagsDropdown';
 import CategoriesDropdown from '@/components/atoms/CategoriesDropdown';
 import UserDropdown from '@/components/atoms/UserDropdown';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+// import ReactQuill from 'react-quill';
+
 
 const NewsForm: React.FC = () => {
   const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
@@ -118,7 +118,7 @@ const NewsForm: React.FC = () => {
 
       <div className="mb-4">
         <label htmlFor="description" className="block text-sm font-medium">Description</label>
-        <ReactQuill
+        {/* <ReactQuill
            id="description"
            value={description}
            onChange={(value) => setDescription(value)}
@@ -128,7 +128,7 @@ const NewsForm: React.FC = () => {
            style={{ height: '200px' }}
            modules={modules}
            // Optional: Add error boundary or logging
-        />
+        /> */}
       </div>
       <div>
         <label htmlFor="keywords" className="block text-sm font-medium">Keywords</label>

@@ -1,83 +1,92 @@
-// src/app/news/[id]/page.tsx
-"use client";
+import { getAllPosts } from "@/hooks/news/useNews";
+import  getNews  from "@/hooks/news/useNewsDtails";
+import { formatDistanceToNow } from 'date-fns';
+import Image from "next/image";
+import { notFound } from 'next/navigation';
 
-import React, { useEffect, useState } from 'react';
-import { Spin, message } from 'antd';
-import { INews } from '@/types/news'; // Adjust the path as needed
-import Link from 'next/link';
+interface Params {
+  id: string;
+}
 
-const BlogDetailPage = ({ params }: { params: { id: string } }) => {
+export async function generateMetadata({ params }: { params: Params }) {
   const { id } = params;
-
-  const [blog, setBlog] = useState<INews | null>(null); // Type the blog state as INews or null
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchBlog = async () => {
-      try {
-        if (!id) {
-          console.error('Blog ID is missing');
-          throw new Error('Blog ID is missing');
-        }
-
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/article/${id}`);
-        if (!response.ok) {
-          console.error('Failed to fetch blog details');
-          throw new Error('Failed to fetch blog details');
-        }
-        const result = await response.json();
-        setBlog(result.data);
-      } catch (error) {
-        setError('Failed to fetch blog details');
-        message.error('Failed to fetch blog details');
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
+  const article = await getNews(id);
+  
+  if (!article) {
+    return {
+      title: 'Article Not Found',
+      description: 'The requested article could not be found.',
     };
-
-    fetchBlog();
-  }, [id]);
-
-  if (loading) return <Spin size="large" className="flex justify-center mt-10" />;
-
-  if (error) {
-    return <div className="text-center p-4">{error}</div>;
   }
 
-  if (!blog) return <div className="text-center p-4">No blog found</div>;
+  return {
+    title: article.title,
+    description: article.subtitle,
+    openGraph: {
+      images: [article.imageUrl],
+    },
+  };
+}
+
+export default async function ArticlePage({ params }: { params: Params }) {
+  const { id } = params;
+  const article = await getNews(id);
+
+  if (!article) {
+    notFound();
+  }
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-4">{blog.headline}</h1>
-      {blog.urlToImage && blog.urlToImage.length > 0 && (
-        <picture>
-          <img
-          src={blog.urlToImage[0]}
-          alt={blog.headline}
-          className="w-5/6 h-64 object-cover mb-4"
-        />
-        </picture>
-      )}
-      <div
-        className="text-gray-600"
-        dangerouslySetInnerHTML={{ __html: blog.description }}
-      />
-      {blog.urlToImage && blog.urlToImage.length > 0 && (
-        <picture>
-          <img
-          src={blog.urlToImage[1]}
-          alt={blog.headline}
-          className="w-5/6 h-64 object-cover mb-4"
-        />
-        </picture>
-      )}
-      <Link href="/dashboard/news">
-        <p className="text-blue-500 hover:underline">Back to news list</p>
-      </Link>
-    </div>
-  );
-};
+    <article className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="mb-6">
+        <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+          <span>{article.category}</span>
+          <span>•</span>
+          <span>{formatDistanceToNow(new Date(article.createdAt), { addSuffix: true })}</span>
+          <span>•</span>
+          <span>{article.location}</span>
+        </div>
+        <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
+        <p className="text-xl text-gray-600 mb-6">{article.subtitle}</p>
+      </div>
+      
+      <div className="relative h-96 mb-8">
+        {/* <Image
+          src={article.imageUrl}
+          alt={article.title}
+          fill
+          className="object-cover rounded-lg"
+        /> */}
+      </div>
 
-export default BlogDetailPage;
+      <div className="prose max-w-none">
+        <div dangerouslySetInnerHTML={{ __html: article.content }} />
+      </div>
+
+      <div className="mt-8 flex items-center justify-between border-t pt-6">
+        <div className="flex items-center gap-4">
+          <span>👁 {article.views} views</span>
+          <span>❤️ {article.likes} likes</span>
+          <span>💬 {article.commentsCount} comments</span>
+        </div>
+        <div className="flex gap-2">
+          {article.tags.map((tag: any)  => (
+            <span 
+              key={tag}
+              className="bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export async function generateStaticParams() {
+  const newsData = await getAllPosts();
+  return newsData.articles.map((article) => ({
+    id: article._id,
+  }));
+}

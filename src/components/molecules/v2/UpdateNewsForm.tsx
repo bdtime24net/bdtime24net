@@ -6,8 +6,8 @@ import { useRouter, useSearchParams } from 'next/navigation'; // Use next/naviga
 import TagsDropdown from '@/components/atoms/TagsDropdown';
 import CategoriesDropdown from '@/components/atoms/CategoriesDropdown';
 import UserDropdown from '@/components/atoms/UserDropdown';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+// import ReactQuill from 'react-quill';
+// import 'react-quill/dist/quill.snow.css';
 
 const UpdateNewsForm: React.FC = () => {
   const router = useRouter();
@@ -156,7 +156,7 @@ const UpdateNewsForm: React.FC = () => {
 
           <div className="mb-4">
             <label htmlFor="description" className="block text-sm font-medium">Description</label>
-            <ReactQuill
+            {/* <ReactQuill
               id="description"
               value={description}
               onChange={(value) => setDescription(value)}
@@ -165,7 +165,7 @@ const UpdateNewsForm: React.FC = () => {
               placeholder="Enter description..."
               style={{ height: '200px' }}
               modules={modules}
-            />
+            /> */}
           </div>
 
           <div className="mb-4">
