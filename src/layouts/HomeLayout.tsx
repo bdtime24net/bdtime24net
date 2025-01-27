@@ -14,7 +14,6 @@ export default async function HomeLayout({
               <main className="flex-grow container mx-auto px-4 pt-20">
                 {children}
               </main>
-
               </div>
           
     );

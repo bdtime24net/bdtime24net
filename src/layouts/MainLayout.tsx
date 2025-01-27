@@ -6,7 +6,7 @@ import TopNavbar from "@/components/pages/Home/TopNavbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Welcome to the blog by Zobkazi",
+  title: "bdtime24.net || বিডিটাইম২৪.নেট",
   description: "This is the blog by Zobkazi",
   icons: { icon: "/logos/next-icon.svg" },
 };
@@ -17,7 +17,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="bn">
       <body className={inter.className}>
         <main>
           <div>
