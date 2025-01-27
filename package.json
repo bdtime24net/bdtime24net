@@ -1,12 +1,13 @@
 {
-  "name": "bdtime24.github.io",
-  "version": "0.1.0",
+  "name": "bdtime24net",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "type-check": "tsc"
   },
   "dependencies": {
     "@ant-design/icons": "^5.4.0",
@@ -41,5 +42,12 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "author": {
+    "name": "Zobaidul Kazi",
+    "email": "kazi@bdtime24.net"    
+  },
+  "description": "This is a project for bdtime24.net",
+  "node": ">=18.0.0"
+  
 }
