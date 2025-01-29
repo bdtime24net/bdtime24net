@@ -5,7 +5,6 @@ import { z } from "zod";
 export const ArticleSchema = z.object({
   id: z.string(),
   headline: z.string(),
-  slug: z.string(),
   description: z.string(),
   sourceName: z.string(),
   url: z.string(),
@@ -15,6 +14,7 @@ export const ArticleSchema = z.object({
   tagId: z.string(),
   categoryId: z.string(),
 });
+
 
 // Define schema for the entire response
 export const ArticleResponseSchema = z.object({

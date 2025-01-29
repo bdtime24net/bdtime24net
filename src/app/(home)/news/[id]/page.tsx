@@ -51,12 +51,13 @@ export default async function ArticlePage({ params }: { params: Params }) {
       </div>
       
       <div className="relative h-96 mb-8">
-        {/* <Image
+      <picture>
+      <img
           src={article.imageUrl}
           alt={article.title}
-          fill
           className="object-cover rounded-lg"
-        /> */}
+        />
+      </picture>
       </div>
 
       <div className="prose max-w-none">

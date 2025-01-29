@@ -4,7 +4,7 @@ const navData = [
       id: 1,
       en: "latest-news",
       bn: 'সর্বশেষ',
-      path: '/latest-news'
+      path: '/latest'
     },
     {
       id: 2,

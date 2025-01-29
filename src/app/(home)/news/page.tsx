@@ -24,12 +24,13 @@ export default async function NewsPage() {
         {newsData.articles.map((article) => (
           <article key={article._id} className="border rounded-lg overflow-hidden shadow-lg">
             <div className="relative h-48">
-              {/* <Image
+              <picture>
+              <img
                 src={article.imageUrl}
                 alt={article.title}
-                fill
                 className="object-cover"
-              /> */}
+              />
+              </picture>
             </div>
             <div className="p-4">
               <div className="flex items-center gap-2 mb-2">
