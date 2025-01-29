@@ -29,7 +29,8 @@
     "react-quill": "^0.0.2",
     "react-redux": "^9.1.2",
     "slate": "^0.103.0",
-    "slate-react": "^0.110.0"
+    "slate-react": "^0.110.0",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.6",
@@ -45,9 +46,8 @@
   "license": "MIT",
   "author": {
     "name": "Zobaidul Kazi",
-    "email": "kazi@bdtime24.net"    
+    "email": "kazi@bdtime24.net"
   },
   "description": "This is a project for bdtime24.net",
   "node": ">=18.0.0"
-  
 }
