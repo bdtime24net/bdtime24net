@@ -2,7 +2,7 @@ import { ArticleResponseSchema, ArticleResponse } from "@/types/article";
 
 
 
-export async function getAllArticle(): Promise<ArticleResponse> {
+export async function getAllArticle(page: number, pageSize: number): Promise<ArticleResponse> {
   try {
     const response = await fetch(
 `${process.env.NEXT_PUBLIC_API_URL}/article/`,

@@ -9,13 +9,16 @@ interface Category {
   name: string;
 }
 
+const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL as string;
+
+
 const CategoriesDropdown: React.FC<{ onChange: (value: string) => void }> = ({ onChange }) => {
   const [categories, setCategories] = useState<Category[]>([]);
   
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/category');
+        const response = await fetch(`${NEXT_PUBLIC_API_URL}/category`);
         const result = await response.json();
 
         if (result.success && Array.isArray(result.data)) {

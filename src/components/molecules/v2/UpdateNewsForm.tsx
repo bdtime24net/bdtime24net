@@ -1,212 +1,154 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Input, Button, message, Spin } from 'antd';
-import { useRouter, useSearchParams } from 'next/navigation'; // Use next/navigation for the router
+import React, { useEffect } from 'react';
+import { Input, Button, Form, message, Spin } from 'antd';
+import useArticle from '@/hooks/article/useArticle';
+import { ArticleUpdate } from '@/types/article';
 import TagsDropdown from '@/components/atoms/TagsDropdown';
 import CategoriesDropdown from '@/components/atoms/CategoriesDropdown';
-import UserDropdown from '@/components/atoms/UserDropdown';
-// import ReactQuill from 'react-quill';
-// import 'react-quill/dist/quill.snow.css';
+import User from '@/components/atoms/UserDropdown';
 
-const UpdateNewsForm: React.FC = () => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const newsId = searchParams.get('id'); // Get 'id' parameter from the search params
+interface UpdateNewsFormProps {
+  articleId: string;
+}
 
-  const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const [keywords, setKeywords] = useState<string[]>([]);
-  const [headline, setHeadline] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [url, setUrl] = useState<string>('');
-  const [urlToImage, setUrlToImage] = useState<string[]>([]);
-  const [sourceName, setSourceName] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
+const UpdateNewsForm: React.FC<UpdateNewsFormProps> = ({ articleId }) => {
+  const { article, loading, error, updateArticle } = useArticle(articleId);
+  const [form] = Form.useForm();
 
+  // Pre-populate the form with existing article data
   useEffect(() => {
- 
-
-    // Fetch the existing news article data using newsId
-    const fetchNewsData = async () => {
-      try {
-        const authToken = localStorage.getItem('authToken');
-        if (!authToken) throw new Error('No authentication token found');
-
-        const response = await fetch(`http://localhost:8080/api/article/${newsId}`, {
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-          },
-        });
-
-        const result = await response.json();
-        if (!response.ok) {
-          throw new Error(result.message || 'Failed to fetch news data');
-        }
-
-        // Populate the form with fetched data
-        setHeadline(result.headline);
-        setDescription(result.description);
-        setUrl(result.url);
-        setUrlToImage(result.urlToImage);
-        setKeywords(result.keywords);
-        setSourceName(result.sourceName);
-        setSelectedTagId(result.tagId);
-        setSelectedCategoryId(result.categoryId);
-        setSelectedUserId(result.userId);
-      } catch (error) {
-        message.error(error instanceof Error ? error.message : 'Failed to fetch news data');
-        console.error('Fetch error:', error);
-      }
-    };
-
-    fetchNewsData();
-  }, [newsId]);
-
-  const handleUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedTagId || !selectedCategoryId || !selectedUserId || !headline || !description || !url || !sourceName) {
-      message.error('Please fill all fields');
-      return;
+    if (article) {
+      form.setFieldsValue({
+        headline: article.headline,
+        description: article.description,
+        sourceName: article.sourceName,
+        reporter: article.reporter,
+        url: article.url,
+        urlToImage: article.urlToImage.join(', '), // Convert array to comma-separated string
+        keywords: article.keywords.join(', '), // Convert array to comma-separated string
+        categoryId: article.categoryId,
+        userId: article.userId,
+        tagId: article.tagId,
+      });
     }
+  }, [article, form]);
+
+  const handleSubmit = async (values: ArticleUpdate) => {
+    // Convert comma-separated strings to arrays
+    values.urlToImage = values.urlToImage.split(',').map((url: string) => url.trim());
+    values.keywords = values.keywords.split(',').map((keyword: string) => keyword.trim());
 
     try {
-      const authToken = localStorage.getItem('authToken');
+      const authToken = localStorage.getItem('authToken'); // Retrieve the token from local storage
       if (!authToken) throw new Error('No authentication token found');
 
-      const response = await fetch(`http://localhost:8080/api/${newsId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/article/${articleId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`,
+          'Authorization': `Bearer ${authToken}`, // Include the token in the headers
         },
-        body: JSON.stringify({
-          headline,
-          description,
-          url,
-          urlToImage,
-          keywords,
-          tagId: selectedTagId,
-          categoryId: selectedCategoryId,
-          userId: selectedUserId,
-          sourceName,
-        }),
+        body: JSON.stringify(values),
       });
 
       const result = await response.json();
       if (!response.ok) {
-        throw new Error(result.message || 'Failed to update news');
+        throw new Error(result.message || 'Failed to update article');
       }
 
-      message.success('News successfully updated');
+      message.success('Article updated successfully!');
     } catch (error) {
-      message.error(error instanceof Error ? error.message : 'Failed to update news');
+      message.error(error instanceof Error ? error.message : 'Failed to update article.');
       console.error('Update error:', error);
     }
   };
 
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ align: [] }],
-      ['link', 'image', 'video', 'code-block'],
-      [{ color: [] }, { background: [] }],
-      [{ font: [] }],
-      [{ script: 'sub' }, { script: 'super' }],
-      [{ indent: '-1' }, { indent: '+1' }],
-      ['clean'],
-    ],
-  };
-
+  if (loading) return <Spin size="large" />;
+  if (error) return <p>Error: {error}</p>;
 
   return (
-    <form onSubmit={handleUpdate} className="p-8 shadow-lg bg-slate-50 rounded-lg min-w-full mx-auto space-y-6">
-      {loading ? <Spin size="large" className="flex justify-center items-center min-h-full" /> : (
-        <>
-          <h1 className="text-2xl font-bold">Update News Article</h1>
+    <Form
+      form={form}
+      onFinish={handleSubmit}
+      className="p-8 shadow-lg bg-slate-50 rounded-lg min-w-full mx-auto space-y-6"
+    >
+      <h1 className="text-2xl font-bold">Update News Article</h1>
 
-          <div className="mb-4">
-            <label htmlFor="sourceName" className="block text-sm font-medium">Source Name</label>
-            <Input
-              type="text"
-              id="sourceName"
-              value={sourceName}
-              onChange={(e) => setSourceName(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-            />
-          </div>
+      {/* Source Name Field */}
+      <Form.Item
+        name="sourceName"
+        label="Source Name"
+        rules={[{ required: true, message: 'Please enter source name' }]}
+      >
+        <Input />
+      </Form.Item>
 
-          <TagsDropdown onChange={(value) => setSelectedTagId(value)} />
-          <CategoriesDropdown onChange={(value) => setSelectedCategoryId(value)} />
-          <UserDropdown onChange={(value) => setSelectedUserId(value)} />
+      {/* Reporter Field */}
+      <Form.Item
+        name="reporter"
+        label="Reporter"
+        rules={[{ required: true, message: 'Please enter reporter name' }]}
+      >
+        <Input />
+      </Form.Item>
 
-          <div className="mb-4">
-            <label htmlFor="headline" className="block text-sm font-medium">Headline</label>
-            <Input
-              type="text"
-              id="headline"
-              value={headline}
-              onChange={(e) => setHeadline(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-            />
-          </div>
+      {/* Tag, Category, and User Dropdowns */}
+      <div className="flex space-x-4 mb-4">
+        <TagsDropdown onChange={(value: string) => form.setFieldsValue({ tagId: value })} />
+        <CategoriesDropdown onChange={(value: string) => form.setFieldsValue({ categoryId: value })} />
+        <User onChange={(value: string) => form.setFieldsValue({ userId: value })} />
+      </div>
 
-          <div className="mb-4">
-            <label htmlFor="description" className="block text-sm font-medium">Description</label>
-            {/* <ReactQuill
-              id="description"
-              value={description}
-              onChange={(value) => setDescription(value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-              theme="snow"
-              placeholder="Enter description..."
-              style={{ height: '200px' }}
-              modules={modules}
-            /> */}
-          </div>
+      {/* Headline Field */}
+      <Form.Item
+        name="headline"
+        label="Headline"
+        rules={[{ required: true, message: 'Please enter headline' }]}
+      >
+        <Input />
+      </Form.Item>
 
-          <div className="mb-4">
-            <label htmlFor="url" className="block text-sm font-medium">URL</label>
-            <Input
-              type="text"
-              id="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-            />
-          </div>
+      {/* Description Field */}
+      <Form.Item
+        name="description"
+        label="Description"
+        rules={[{ required: true, message: 'Please enter description' }]}
+      >
+        <Input.TextArea rows={6} />
+      </Form.Item>
 
-          <div className="mb-4">
-            <label htmlFor="urlToImage" className="block text-sm font-medium">Image URLs (comma separated)</label>
-            <Input
-              type="text"
-              id="urlToImage"
-              value={urlToImage.join(', ')}
-              onChange={(e) => setUrlToImage(e.target.value.split(',').map((img) => img.trim()))}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-            />
-          </div>
+      {/* Keywords Field */}
+      <Form.Item
+        name="keywords"
+        label="Keywords (comma separated)"
+        rules={[{ required: true, message: 'Please enter keywords' }]}
+      >
+        <Input placeholder="Enter keywords separated by commas" />
+      </Form.Item>
 
-          <div className="mb-4">
-            <label htmlFor="keywords" className="block text-sm font-medium">Keywords (comma separated)</label>
-            <Input
-              type="text"
-              id="keywords"
-              value={keywords.join(', ')}
-              onChange={(e) => setKeywords(e.target.value.split(',').map((kw) => kw.trim()))}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-            />
-          </div>
+      {/* URL Field */}
+      <Form.Item
+        name="url"
+        label="URL"
+        rules={[{ required: true, message: 'Please enter URL' }]}
+      >
+        <Input />
+      </Form.Item>
 
-          <Button type="primary" htmlType="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-            Update News
-          </Button>
-        </>
-      )}
-    </form>
+      {/* Image URLs Field */}
+      <Form.Item
+        name="urlToImage"
+        label="Image URLs (comma separated)"
+        rules={[{ required: true, message: 'Please enter image URLs' }]}
+      >
+        <Input placeholder="Enter image URLs separated by commas" />
+      </Form.Item>
+
+      <Button type="primary" htmlType="submit" className="w-full bg-yellow-400 hover:bg-yellow-500 text-black">
+        Update News
+      </Button>
+    </Form>
   );
 };
 

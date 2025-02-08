@@ -1,19 +1,43 @@
 // src/components/molecules/v2/NewsList.tsx
+
 "use client";
 
 import { Button, Table, Space, Pagination, message } from 'antd';
-import useBlogs from '@/hooks/useBlogs';
-import { useState } from 'react';
+import { getAllArticle } from '@/hooks/article/getAllArticle';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useUser } from '@/hooks/useUser';
+import { ArticleResponse } from "@/types/article";
 
 const NewsList = () => {
   const [page, setPage] = useState(1);
-  const pageSize = 5; // Set the number of items per page
+  const pageSize = 5;
+  const [blogs, setBlogs] = useState<ArticleResponse['articles']>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  const { user, error: userError } = useUser();
 
-  const { blogs, loading, error, total } = useBlogs(page, pageSize);
-  const { user, error: userError } = useUser(); // Get user info and authentication status
+  // Fetch articles when page changes
+  useEffect(() => {
+    const fetchArticles = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await getAllArticle(page, pageSize);
+        setBlogs(response.articles);
+        setTotal(response.totalCount);
+      } catch (err) {
+        setError('Failed to fetch articles');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArticles();
+  }, [page]);
 
   const handlePageChange = (page: number) => {
     setPage(page);
@@ -33,7 +57,7 @@ const NewsList = () => {
       }
 
       message.success('Blog deleted successfully');
-      // Optionally, trigger a refetch of the blogs or update state
+      setBlogs(blogs.filter(blog => blog.id !== id)); // Update state to remove the deleted blog
     } catch (error) {
       message.error(error instanceof Error ? error.message : 'Failed to delete blog');
       console.error(error);

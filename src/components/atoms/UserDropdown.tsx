@@ -9,6 +9,10 @@ interface User {
   username: string;
 }
 
+
+const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL as string;
+
+
 const UserDropdown: React.FC<{ onChange: (value: string) => void }> = ({ onChange }) => {
   const [users, setUsers] = useState<User[]>([]);
   
@@ -18,7 +22,7 @@ const UserDropdown: React.FC<{ onChange: (value: string) => void }> = ({ onChang
         const authToken = localStorage.getItem('authToken');
         if (!authToken) throw new Error('No authentication token found');
 
-        const response = await fetch('http://localhost:8080/api/user', {
+        const response = await fetch(`${NEXT_PUBLIC_API_URL}/user`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         const result = await response.json();

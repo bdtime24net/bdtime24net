@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { message } from 'antd';
 
-const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_API_URL as string;
+const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL as string;
 
 interface Blog {
   id: string;
@@ -28,7 +28,7 @@ const useBlogs = (page: number, pageSize: number) => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await fetch(`${NEXT_PUBLIC_URL}/api/article?page=${page}&limit=${pageSize}`, {
+        const response = await fetch(`${NEXT_PUBLIC_API_URL}/article?page=${page}&limit=${pageSize}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

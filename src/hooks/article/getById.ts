@@ -1,19 +1,6 @@
 // /src/types/article.ts
 import { z } from 'zod';
-
-// Define the Zod schema to validate the API response for a single article.
-export const ArticleResponseSchemaById = z.object({
-  id: z.string(),
-  headline: z.string(),
-  description: z.string(),
-  urlToImage: z.array(z.string()).optional(),
-  keywords: z.array(z.string()).optional(),
-  sourceName: z.string().optional(),
-  categoryId: z.string().optional(),
-  userId: z.string().optional(),
-  publishedAt: z.string(),
-  updatedAt: z.string(),
-});
+import {ArticleResponseSchemaById} from '@/types/article'
 
 // Define the types for the article response, based on the Zod schema.
 export type ArticleResponse = z.infer<typeof ArticleResponseSchemaById>;

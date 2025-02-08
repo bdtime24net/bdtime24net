@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 export function useSearch(query: string) {
   const [results, setResults] = useState<any[]>([]);
@@ -18,7 +18,7 @@ export function useSearch(query: string) {
         );
 
         if (!response.ok) {
-          throw new Error("Failed to fetch search results");
+          throw new Error('Failed to fetch search results');
         }
 
         const data = await response.json();

@@ -1,7 +1,7 @@
 // src/hooks/useSignInFetchData.ts
 import { useState } from "react";
 
-const NEXT_PUBLIC_SIGNIN_URL = process.env.NEXT_PUBLIC_API_URL as string;
+const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL as string;
 
 
 const useSignInFetchData = () => {
@@ -14,7 +14,7 @@ const useSignInFetchData = () => {
 
     try {
       const response = await fetch(
-        `${NEXT_PUBLIC_SIGNIN_URL}/api/auth/signin`,
+        `${NEXT_PUBLIC_API_URL}/auth/signin`,
         {
           method: "POST",
           headers: {
