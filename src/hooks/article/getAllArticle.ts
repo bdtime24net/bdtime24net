@@ -1,9 +1,11 @@
 import { ArticleResponseSchema, ArticleResponse } from "@/types/article";
 
+
+
 export async function getAllArticle(): Promise<ArticleResponse> {
   try {
     const response = await fetch(
-      "http://localhost:8080/api/article?page=1&limit=5",
+`${process.env.NEXT_PUBLIC_API_URL}/article/`,
       {
         method: "GET",
         next: {
@@ -18,8 +20,13 @@ export async function getAllArticle(): Promise<ArticleResponse> {
 
     const jsonData = await response.json();
 
+    // Check if the expected `metadata` structure exists
+    if (!jsonData.metadata || !jsonData.metadata.articles) {
+      throw new Error("Invalid response format");
+    }
+
     // Validate and parse the response using Zod
-    const parsedData = ArticleResponseSchema.parse(jsonData);
+    const parsedData = ArticleResponseSchema.parse(jsonData.metadata);
 
     return parsedData;
   } catch (error) {
@@ -28,11 +35,11 @@ export async function getAllArticle(): Promise<ArticleResponse> {
       totalCount: 0,
       totalPages: 0,
       currentPage: 0,
+      hasNextPage: false,
+      hasPrevPage: false,
       nextPage: null,
       prevPage: null,
-      hasNextPage: null,
-      hasPrevPage: null,
-      articles: []  // Ensure that articles is always an array, even in case of an error
+      articles: [] // Ensure that articles is always an array, even in case of an error
     };
   }
 }

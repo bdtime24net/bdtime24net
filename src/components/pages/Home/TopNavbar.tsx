@@ -1,16 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { MenuOutlined, BellOutlined, SearchOutlined, SettingOutlined } from '@ant-design/icons';
+import { MenuOutlined, BellOutlined, SettingOutlined } from '@ant-design/icons';
 import RightDrawerNavigation from './RightDrawerNavigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import clsx from 'clsx';
 import navData from '@/contexts/navData';
+import SearchComponent from './search/SearchComponent'; // Import SearchComponent
+import ThemeSwitch from '@/components/atoms/ThemeSwitch';
 
 const TopNavbar: React.FC = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Add scroll event to change navbar style
@@ -63,11 +64,9 @@ const TopNavbar: React.FC = () => {
 
       {/* Icons */}
       <div className="flex items-center space-x-4">
-        <SearchOutlined
-          className="text-xl cursor-pointer"
-          onClick={() => setSearchOpen(!searchOpen)}
-        />
+        <SearchComponent /> {/* Only one SearchComponent */}
         <BellOutlined className="text-xl cursor-pointer" />
+        <ThemeSwitch />
         <SettingOutlined className="text-xl cursor-pointer" />
         {/* Menu button for mobile */}
         <MenuOutlined
@@ -75,17 +74,6 @@ const TopNavbar: React.FC = () => {
           onClick={() => setDrawerOpen(true)}
         />
       </div>
-
-      {/* Search Box (conditionally rendered) */}
-      {searchOpen && (
-        <div className="absolute top-16 right-4 w-72 bg-white shadow-md p-4 rounded-md">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="w-full border border-gray-300 rounded-md p-2"
-          />
-        </div>
-      )}
 
       {/* Right Drawer Navigation */}
       <RightDrawerNavigation

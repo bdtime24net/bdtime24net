@@ -22,7 +22,7 @@ export type ArticleResponse = z.infer<typeof ArticleResponseSchemaById>;
 export async function getArticleById(id: string): Promise<ArticleResponse | null> {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/article/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/article/${id}`,
       {
         method: "GET",
         next: {

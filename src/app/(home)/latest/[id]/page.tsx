@@ -1,6 +1,6 @@
 // /src/app/(home)/latest/[id]/page.tsx
 import { getArticleById } from "@/hooks/article/getById";
-import { getAllArticle } from "@/hooks/article/useAeticle";
+import { getAllArticle } from "@/hooks/article/getAllArticle";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -38,7 +38,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
   }
 
   return (
-    <article className="container mx-auto px-4 py-8 max-w-4xl">
+    <article className="container mx-auto px-4 py-8 max-w-4xl mt-16">
       <header>
         <h1 className="text-3xl font-semibold">{articleData.headline}</h1>
         <p className="text-sm text-gray-500">

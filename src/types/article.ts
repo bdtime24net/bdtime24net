@@ -15,17 +15,35 @@ export const ArticleSchema = z.object({
   categoryId: z.string(),
 });
 
+// totalCount: 0,
+// totalPages: 0,
+// currentPage: 0,
+// hasNextPage: null,
+// hasPrevPage: null,
+// nextPage: null,
+// prevPage: null,
+// articles: []
 
 // Define schema for the entire response
 export const ArticleResponseSchema = z.object({
-  totalCount: z.number().nullable().optional(),
-  totalPages: z.number().nullable().optional(),
-  currentPage: z.number().nullable().optional(),
-  hasNextPage: z.boolean().nullable().optional(),
-  hasPrevPage: z.boolean().nullable().optional(),
-  nextPage: z.string().nullable().optional(),
-  prevPage: z.string().nullable().optional(),
-  articles: z.array(ArticleSchema), // Articles array (list of articles)
+  totalCount: z.number().default(0),
+  totalPages: z.number().default(0),
+  currentPage: z.number().default(1),
+  hasNextPage: z.boolean().nullable(),
+  hasPrevPage: z.boolean().nullable(),
+  nextPage: z.number().nullable(),
+  prevPage: z.number().nullable(),
+  articles: z.array(
+    z.object({
+      id: z.string(),
+      headline: z.string(),
+      description: z.string(),
+      urlToImage: z.array(z.string()).default([]), // Ensure it's always an array
+      categoryId: z.string().optional().nullable(),
+      publishedAt: z.string(),
+      updatedAt: z.string(),
+    })
+  ).default([]), // Ensure articles is always an array
 });
 
 // Infer TypeScript types from the schema
