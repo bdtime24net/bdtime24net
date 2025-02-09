@@ -11,15 +11,13 @@ const DeleteArticle: React.FC<{ articleId: string }> = ({ articleId }) => {
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
-    // Check if authToken exists in localStorage
     const authToken = localStorage.getItem('authToken');
     
     if (!authToken) {
       message.error('You are not authenticated!');
-      return; // Stop the delete operation if no token is found
+      return;
     }
 
-    // Proceed with the delete operation
     setLoading(true);
     
     try {
@@ -31,12 +29,11 @@ const DeleteArticle: React.FC<{ articleId: string }> = ({ articleId }) => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData?.message || 'Failed to delete article');
+        throw new Error('Failed to delete article');
       }
 
       message.success('Article deleted successfully');
-      router.push('/dashboard/news'); // Navigate to the news dashboard
+      router.push('/dashboard/news');
     } catch (error) {
       message.error(error instanceof Error ? error.message : 'Failed to delete article');
     } finally {
@@ -45,7 +42,7 @@ const DeleteArticle: React.FC<{ articleId: string }> = ({ articleId }) => {
   };
 
   return (
-    <div className='mt-24'>
+    <div className="mt-24">
       <h2>Are you sure you want to delete this article?</h2>
       <Button danger onClick={handleDelete} loading={loading}>
         Delete Article
