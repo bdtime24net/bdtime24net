@@ -1,22 +1,25 @@
-// /src/app/update/[id].tsx
+// /src/app/delete/[id].tsx
+
 import React from 'react';
-import UpdateNewsForm from '@/components/molecules/v2/UpdateNewsForm';
 import DeleteArticle from '@/components/molecules/v2/DeleteArticle';
 
-interface UpdateArticlePageProps {
+interface DeleteArticlePageProps {
   params: {
     id: string; // Define the type of the id parameter
   };
 }
 
-const UpdateArticlePage: React.FC<UpdateArticlePageProps> = ({ params }) => {
+const DeleteArticlePage: React.FC<DeleteArticlePageProps> = ({ params }) => {
   const { id } = params; // Get the article ID from the URL parameters
 
   return (
     <div className="container mx-auto p-4">
+      <h1>Update Article</h1>
+      {/* Render the delete button component */}
       <DeleteArticle articleId={id} />
+      {/* Here, you would also render the form to update the article */}
     </div>
   );
 };
 
-export default UpdateArticlePage;
+export default DeleteArticlePage;

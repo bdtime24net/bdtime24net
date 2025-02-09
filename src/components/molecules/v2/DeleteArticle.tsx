@@ -31,7 +31,8 @@ const DeleteArticle: React.FC<{ articleId: string }> = ({ articleId }) => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete article');
+        const errorData = await response.json();
+        throw new Error(errorData?.message || 'Failed to delete article');
       }
 
       message.success('Article deleted successfully');
