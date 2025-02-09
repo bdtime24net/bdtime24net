@@ -46,15 +46,15 @@ export default async function ArticlePage({ params }: { params: Params }) {
       </header>
 
       <section className="mt-6">
-       <picture>
-       <img
-          src={articleData.urlToImage?.[0] || "/default-image.jpg"}
-          alt={articleData.headline}
-          width={1200}
-          height={600}
-          className="w-full h-auto rounded-lg"
-        />
-       </picture>
+        <picture>
+          <img
+            src={articleData.urlToImage?.[0] || "/default-image.jpg"}
+            alt={articleData.headline}
+            width={1200}
+            height={600}
+            className="w-full h-auto rounded-lg"
+          />
+        </picture>
       </section>
 
       <section className="mt-6">
@@ -66,8 +66,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
 
 export async function generateStaticParams() {
   const newsData = await getAllArticle(1, 10); // Example values for page and pageSize
-  return newsData.articles.map((article) => {
-    id: article.id;
-  })
+  return newsData.articles.map((article) => ({
+    id: article.id,  // Correctly returning an object
+  }));
 }
-
