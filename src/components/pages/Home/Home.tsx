@@ -13,7 +13,7 @@ const Home: React.FC = () => {
        {/* <Breadcrumbs /> */}
       
        <NewsGrid />
-       <NewsPage />
+       {/* <NewsPage /> */}
       </section>
       
       <ScrollToTop />

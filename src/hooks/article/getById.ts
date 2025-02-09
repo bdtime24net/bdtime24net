@@ -1,4 +1,4 @@
-// /src/types/article.ts
+// /src/hooks/getById.ts
 import { z } from 'zod';
 import {ArticleResponseSchemaById} from '@/types/article'
 
