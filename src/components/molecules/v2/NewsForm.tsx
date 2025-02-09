@@ -28,11 +28,12 @@ const NewsForm: React.FC = () => {
       message.error('Please fill all fields');
       return;
     }
-
+  
     try {
-      const authToken = localStorage.getItem('authToken');
+      // Ensure localStorage is only accessed in the browser
+      const authToken = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
       if (!authToken) throw new Error('No authentication token found');
-
+  
       const response = await fetch(`${NEXT_PUBLIC_API_URL}/article/create`, {
         method: 'POST',
         headers: {
@@ -52,14 +53,15 @@ const NewsForm: React.FC = () => {
           reporter
         })
       });
-
+  
       const result = await response.json();
       if (!response.ok) {
         throw new Error(result.message || 'Failed to submit news');
       }
-
+  
       message.success('News successfully created');
-      // Clear form
+  
+      // Clear form fields after successful submission
       setHeadline('');
       setDescription('');
       setUrl('');
@@ -75,97 +77,12 @@ const NewsForm: React.FC = () => {
       console.error('Submission error:', error);
     }
   };
+  
 
  
 
   return (
-  //   <form onSubmit={handleSubmit} className="p-8 shadow-lg bg-slate-50 rounded-lg min-w-full mx-auto space-y-6">
-  //     <h1 className="text-2xl font-bold">Create News Article</h1>
 
-  //     <div className="mb-4">
-  //       <label htmlFor="sourceName" className="block text-sm font-medium text-pu">Source Name</label>
-  //       <Input
-  //         type="text"
-  //         id="sourceName"
-  //         value={sourceName}
-  //         onChange={(e) => setSourceName(e.target.value)}
-  //         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-  //       />
-  //     </div>
-
-  //     <TagsDropdown onChange={(value) => setSelectedTagId(value)} />
-  //     <CategoriesDropdown onChange={(value) => setSelectedCategoryId(value)} />
-  //     <UserDropdown onChange={(value) => setSelectedUserId(value)} />
-
-  //     <div className="mb-4">
-  //       <label htmlFor="headline" className="block text-sm font-medium">Headline</label>
-  //       <Input
-  //         type="text"
-  //         id="headline"
-  //         value={headline}
-  //         onChange={(e) => setHeadline(e.target.value)}
-  //         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-  //       />
-  //     </div>
-
-  //     <div className="mb-4">
-  //       <label htmlFor="description" className="block text-sm font-medium">Description</label>
-  //       <textarea
-  //   id="description"
-  //   value={description}
-  //   onChange={(e) => setDescription(e.target.value)}
-  //   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-  //   placeholder="Enter description..."
-  //   rows={6}  // Adjust the number of rows to your preference
-  // />
-  //     </div>
-  //     <div>
-  //       <label htmlFor="keywords" className="block text-sm font-medium">Keywords</label>
-  //       <Input
-  //         type="text"
-  //         id="keywords"
-  //         value={keywords.join(', ')}
-  //         onChange={(e) => setKeywords(e.target.value.split(',').map(s => s.trim()))}
-  //         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-  //       />
-  //     </div>
-  //     <div className="mb-4">
-  //       <label htmlFor="url" className="block text-sm font-medium">URL</label>
-  //       <Input
-  //         type="text"
-  //         id="url"
-  //         value={url}
-  //         onChange={(e) => setUrl(e.target.value)}
-  //         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-  //       />
-  //     </div>
-
-  //     <div className="mb-4">
-  //       <label htmlFor="urlToImage" className="block text-sm font-medium">Image URLs (comma separated)</label>
-  //       <Input
-  //         type="text"
-  //         id="urlToImage"
-  //         value={urlToImage.join(', ')}
-  //         onChange={(e) => setUrlToImage(e.target.value.split(',').map(s => s.trim()))}
-  //         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-  //       />
-  //     </div>
-
-  //     <div className="mb-4">
-  //       <label htmlFor="keywords" className="block text-sm font-medium">Keywords (comma separated)</label>
-  //       <Input
-  //         type="text"
-  //         id="keywords"
-  //         value={keywords.join(', ')}
-  //         onChange={(e) => setKeywords(e.target.value.split(',').map(s => s.trim()))}
-  //         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-  //       />
-  //     </div>
-
-  //     <Button type="primary" htmlType="submit" className="w-full bg-yellow-400 hover:bg-yellow-500 text-black">
-  //       Submit News
-  //     </Button>
-  //   </form>
 
   <form onSubmit={handleSubmit} className="p-8 shadow-lg bg-slate-50 rounded-lg min-w-full mx-auto space-y-6">
       <h1 className="text-2xl font-bold">Create News Article</h1>

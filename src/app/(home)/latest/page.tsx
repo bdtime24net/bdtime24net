@@ -1,9 +1,13 @@
-import SearchComponent from "@/components/pages/Home/search/SearchComponent";
 import { getAllArticle } from "@/hooks/article/getAllArticle";
 import Link from "next/link";
 
 export default async function ArticlePage() {
-  const newsData = await getAllArticle();
+  // Set default values for page and pageSize
+  const page = 1;      // You can change this to any desired page
+  const pageSize = 10; // Set how many articles you want to show per page
+
+  // Call the getAllArticle function with page and pageSize arguments
+  const newsData = await getAllArticle(page, pageSize);
 
   return (
     <div className="container mx-auto px-4 py-8">

@@ -1,155 +1,193 @@
 'use client';
+import React, { useState, useEffect } from 'react';
+import { Input, Button, message } from 'antd';
+import { useRouter } from 'next/navigation';
 
-import React, { useEffect } from 'react';
-import { Input, Button, Form, message, Spin } from 'antd';
-import useArticle from '@/hooks/article/useArticle';
-import { ArticleUpdate } from '@/types/article';
-import TagsDropdown from '@/components/atoms/TagsDropdown';
-import CategoriesDropdown from '@/components/atoms/CategoriesDropdown';
-import User from '@/components/atoms/UserDropdown';
 
-interface UpdateNewsFormProps {
-  articleId: string;
-}
+const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL as string;
 
-const UpdateNewsForm: React.FC<UpdateNewsFormProps> = ({ articleId }) => {
-  const { article, loading, error, updateArticle } = useArticle(articleId);
-  const [form] = Form.useForm();
+const UpdateNewsForm: React.FC<{ articleId: string }> = ({ articleId }) => {
+  const router = useRouter();
+  const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [keywords, setKeywords] = useState<string[]>([]);
+  const [headline, setHeadline] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [url, setUrl] = useState<string>('');
+  const [urlToImage, setUrlToImage] = useState<string[]>([]);
+  const [sourceName, setSourceName] = useState<string>('');
+  const [reporter, setReporter] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
 
-  // Pre-populate the form with existing article data
+  // ✅ **Fetch Article Data on Load**
   useEffect(() => {
-    if (article) {
-      form.setFieldsValue({
-        headline: article.headline,
-        description: article.description,
-        sourceName: article.sourceName,
-        reporter: article.reporter,
-        url: article.url,
-        urlToImage: article.urlToImage.join(', '), // Convert array to comma-separated string
-        keywords: article.keywords.join(', '), // Convert array to comma-separated string
-        categoryId: article.categoryId,
-        userId: article.userId,
-        tagId: article.tagId,
-      });
-    }
-  }, [article, form]);
+    const fetchArticle = async () => {
+      try {
+        const authToken = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+        if (!authToken) throw new Error("No authentication token found");
 
-  const handleSubmit = async (values: ArticleUpdate) => {
-    // Convert comma-separated strings to arrays
-    values.urlToImage = values.urlToImage.split(',').map((url: string) => url.trim());
-    values.keywords = values.keywords.split(',').map((keyword: string) => keyword.trim());
+        const response = await fetch(`${NEXT_PUBLIC_API_URL}/article/${articleId}`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch article");
+
+        const data = await response.json();
+        setHeadline(data.headline);
+        setDescription(data.description);
+        setUrl(data.url);
+        setUrlToImage(data.urlToImage || []);
+        setKeywords(data.keywords || []);
+        setSelectedTagId(data.tagId);
+        setSelectedCategoryId(data.categoryId);
+        setSelectedUserId(data.userId);
+        setSourceName(data.sourceName);
+        setReporter(data.reporter);
+        setLoading(false);
+      } catch (error) {
+        message.error(error instanceof Error ? error.message : "Failed to load article");
+      }
+    };
+
+    fetchArticle();
+  }, [articleId]);
+
+  // ✅ **Handle Update Submission**
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedTagId || !selectedCategoryId || !selectedUserId || !headline || !description || !url || !sourceName) {
+      message.error('Please fill all fields');
+      return;
+    }
 
     try {
-      const authToken = localStorage.getItem('authToken'); // Retrieve the token from local storage
-      if (!authToken) throw new Error('No authentication token found');
+      const authToken = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+      if (!authToken) throw new Error("No authentication token found");
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/article/${articleId}`, {
+      console.log(process.env.NEXT_PUBLIC_API_URL)
+
+      const response = await fetch(`${NEXT_PUBLIC_API_URL}/article/${articleId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`, // Include the token in the headers
+          'Authorization': `Bearer ${authToken}`
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          headline,
+          description,
+          url,
+          urlToImage,
+          keywords,
+          tagId: selectedTagId,
+          categoryId: selectedCategoryId,
+          userId: selectedUserId,
+          sourceName,
+          reporter
+        })
       });
 
       const result = await response.json();
       if (!response.ok) {
-        throw new Error(result.message || 'Failed to update article');
+        throw new Error(result.message || "Failed to update news");
       }
 
-      message.success('Article updated successfully!');
+      message.success("News successfully updated");
+      router.push("/dashboard/news"); // ✅ **Navigate after update**
     } catch (error) {
-      message.error(error instanceof Error ? error.message : 'Failed to update article.');
-      console.error('Update error:', error);
+      message.error(error instanceof Error ? error.message : "Failed to update news");
     }
   };
 
-  if (loading) return <Spin size="large" />;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <p>Loading...</p>;
 
   return (
-    <Form
-      form={form}
-      onFinish={handleSubmit}
-      className="p-8 shadow-lg bg-slate-50 rounded-lg min-w-full mx-auto space-y-6"
-    >
+    <form onSubmit={handleUpdate} className="p-8 shadow-lg bg-slate-50 rounded-lg min-w-full mx-auto space-y-6">
       <h1 className="text-2xl font-bold">Update News Article</h1>
 
-      {/* Source Name Field */}
-      <Form.Item
-        name="sourceName"
-        label="Source Name"
-        rules={[{ required: true, message: 'Please enter source name' }]}
-      >
-        <Input />
-      </Form.Item>
-
-      {/* Reporter Field */}
-      <Form.Item
-        name="reporter"
-        label="Reporter"
-        rules={[{ required: true, message: 'Please enter reporter name' }]}
-      >
-        <Input />
-      </Form.Item>
-
-      {/* Tag, Category, and User Dropdowns */}
-      <div className="flex space-x-4 mb-4">
-        <TagsDropdown onChange={(value: string) => form.setFieldsValue({ tagId: value })} />
-        <CategoriesDropdown onChange={(value: string) => form.setFieldsValue({ categoryId: value })} />
-        <User onChange={(value: string) => form.setFieldsValue({ userId: value })} />
+      <div className="mb-4">
+        <label htmlFor="sourceName" className="block text-sm font-medium">Source Name</label>
+        <Input
+          type="text"
+          id="sourceName"
+          value={sourceName}
+          onChange={(e) => setSourceName(e.target.value)}
+        />
       </div>
 
-      {/* Headline Field */}
-      <Form.Item
-        name="headline"
-        label="Headline"
-        rules={[{ required: true, message: 'Please enter headline' }]}
-      >
-        <Input />
-      </Form.Item>
+      <div className="mb-4">
+        <label htmlFor="reporter" className="block text-sm font-medium">Reporter</label>
+        <Input
+          type="text"
+          id="reporter"
+          value={reporter}
+          onChange={(e) => setReporter(e.target.value)}
+        />
+      </div>
 
-      {/* Description Field */}
-      <Form.Item
-        name="description"
-        label="Description"
-        rules={[{ required: true, message: 'Please enter description' }]}
-      >
-        <Input.TextArea rows={6} />
-      </Form.Item>
+      {/* <div className="flex space-x-4 mb-4">
+        <TagsDropdown onChange={(value) => setSelectedTagId(value)} selectedValue={selectedTagId} />
+        <CategoriesDropdown onChange={(value) => setSelectedCategoryId(value)} selectedValue={selectedCategoryId} />
+        <UserDropdown onChange={(value) => setSelectedUserId(value)} selectedValue={selectedUserId} />
+      </div> */}
 
-      {/* Keywords Field */}
-      <Form.Item
-        name="keywords"
-        label="Keywords (comma separated)"
-        rules={[{ required: true, message: 'Please enter keywords' }]}
-      >
-        <Input placeholder="Enter keywords separated by commas" />
-      </Form.Item>
+      <div className="mb-4">
+        <label htmlFor="headline" className="block text-sm font-medium">Headline</label>
+        <Input
+          type="text"
+          id="headline"
+          value={headline}
+          onChange={(e) => setHeadline(e.target.value)}
+        />
+      </div>
 
-      {/* URL Field */}
-      <Form.Item
-        name="url"
-        label="URL"
-        rules={[{ required: true, message: 'Please enter URL' }]}
-      >
-        <Input />
-      </Form.Item>
+      <div className="mb-4">
+        <label htmlFor="description" className="block text-sm font-medium">Description</label>
+        <textarea
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows={6}
+          className="w-full border p-2"
+        />
+      </div>
 
-      {/* Image URLs Field */}
-      <Form.Item
-        name="urlToImage"
-        label="Image URLs (comma separated)"
-        rules={[{ required: true, message: 'Please enter image URLs' }]}
-      >
-        <Input placeholder="Enter image URLs separated by commas" />
-      </Form.Item>
+      <div className="mb-4">
+        <label htmlFor="keywords" className="block text-sm font-medium">Keywords</label>
+        <Input
+          type="text"
+          id="keywords"
+          value={keywords.join(', ')}
+          onChange={(e) => setKeywords(e.target.value.split(',').map(s => s.trim()))}
+        />
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="url" className="block text-sm font-medium">URL</label>
+        <Input
+          type="text"
+          id="url"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+        />
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="urlToImage" className="block text-sm font-medium">Image URLs (comma separated)</label>
+        <Input
+          type="text"
+          id="urlToImage"
+          value={urlToImage.join(', ')}
+          onChange={(e) => setUrlToImage(e.target.value.split(',').map(s => s.trim()))}
+        />
+      </div>
 
       <Button type="primary" htmlType="submit" className="w-full bg-yellow-400 hover:bg-yellow-500 text-black">
         Update News
       </Button>
-    </Form>
+    </form>
   );
 };
 
 export default UpdateNewsForm;
+

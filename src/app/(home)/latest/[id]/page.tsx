@@ -2,7 +2,6 @@
 import { getArticleById } from "@/hooks/article/getById";
 import { getAllArticle } from "@/hooks/article/getAllArticle";
 import { formatDistanceToNow } from "date-fns";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 
 interface Params {
@@ -66,7 +65,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
 }
 
 export async function generateStaticParams() {
-  const newsData = await getAllArticle();
+  const newsData = await getAllArticle(1, 10); // Example values for page and pageSize
   return newsData.articles.map((article) => {
     id: article.id;
   })

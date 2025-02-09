@@ -8,12 +8,15 @@ import Sidebar from "@/components/molecules/v1/dashboard/Sidebar"; // Update wit
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import AntdConfigProvider from "@/providers/AntdConfigProvider";
 const inter = Inter({ subsets: ["latin"] });
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export const metadata: Metadata = {
   title: "Welcome to the blog by Zobkazi",
   description: "This is the blog by Zobkazi",
   icons: { icon: "/logos/next-icon.svg" },
 };
+
+const queryClient = new QueryClient();
 
 export default function DashboardLayout({
   children,
@@ -39,7 +42,9 @@ export default function DashboardLayout({
             {/* Content */}
             <main className="flex-1">
               <div className="py-6">
-                <div className="px-4 sm:px-6 lg:px-8">{children}</div>
+              <QueryClientProvider client={queryClient}>
+      {children}
+    </QueryClientProvider>
               </div>
             </main>
           </div>

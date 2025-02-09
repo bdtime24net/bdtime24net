@@ -7,7 +7,6 @@ import { getAllArticle } from '@/hooks/article/getAllArticle';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useUser } from '@/hooks/useUser';
 import { ArticleResponse } from "@/types/article";
 
 const NewsList = () => {
@@ -18,8 +17,6 @@ const NewsList = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  const { user, error: userError } = useUser();
-
   // Fetch articles when page changes
   useEffect(() => {
     const fetchArticles = async () => {
@@ -43,26 +40,6 @@ const NewsList = () => {
     setPage(page);
   };
 
-  const handleDelete = async (id: string) => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/article/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete blog');
-      }
-
-      message.success('Blog deleted successfully');
-      setBlogs(blogs.filter(blog => blog.id !== id)); // Update state to remove the deleted blog
-    } catch (error) {
-      message.error(error instanceof Error ? error.message : 'Failed to delete blog');
-      console.error(error);
-    }
-  };
 
   if (loading) return <div className="text-center p-4">Loading...</div>;
 
@@ -88,14 +65,15 @@ const NewsList = () => {
               Edit
             </Button>
           </Link>
+          <Link href={`/dashboard/news/delete/${record.id}`}>
           <Button
             type="primary"
             danger
             icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record.id)}
           >
             Delete
           </Button>
+          </Link>
         </Space>
       ),
     },

@@ -1,62 +1,108 @@
-// /src/hooks/article/useArticle.ts
-import { useState, useEffect } from 'react';
-import { ArticleUpdate, ArticleResponseById, ArticleResponseSchemaById } from '@/types/article';
-import { z } from 'zod';
+// /src/hooks/useArticleApi.ts
+import { useState } from 'react';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY as string;
 
-const useArticle = (articleId: string) => {
-  const [article, setArticle] = useState<ArticleResponseById | null>(null);
-  const [loading, setLoading] = useState(true);
+const useArticleApi = () => {
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch article data
-  useEffect(() => {
-    const fetchArticle = async () => {
-      try {
-        const response = await fetch(`${API_URL}/article/${articleId}`);
-        if (!response.ok) throw new Error('Failed to fetch article data');
-        const data = await response.json();
-        const parsedData = ArticleResponseSchemaById.parse(data);
-        setArticle(parsedData);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchArticle();
-  }, [articleId]);
-
-  // Update article data
-  const updateArticle = async (updatedData: ArticleUpdate) => {
+  // ✅ **Fetch Article by ID**
+  const fetchArticle = async (id: string) => {
     setLoading(true);
+    setError(null);
+    
     try {
-      const response = await fetch(`${API_URL}/article/${articleId}`, {
-        method: 'PUT',
+      const response = await fetch(`${API_URL}/article/${id}`, {
         headers: {
-          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${API_KEY}`,
         },
-        body: JSON.stringify(updatedData),
       });
+      
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to update article');
+        throw new Error('Failed to fetch article');
       }
+      
       const data = await response.json();
-      const parsedData = ArticleResponseSchemaById.parse(data);
-      setArticle(parsedData);
-      return true; // Indicate success
+      return data;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
-      return false; // Indicate failure
+      return null;
     } finally {
       setLoading(false);
     }
   };
 
-  return { article, loading, error, updateArticle };
+  // ✅ **Update Article**
+  const updateArticle = async (id: string, updatedData: any) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`${API_URL}/article/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${API_KEY}`,
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update article');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ **Delete Article**
+  const useArticleApi = () => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+  
+    // ✅ **Delete Article with Auth Token**
+    const deleteArticle = async (id: string, authToken: string) => {
+      setLoading(true);
+      setError(null);
+  
+      try {
+        const response = await fetch(`${API_URL}/article/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to delete article');
+        }
+  
+        const data = await response.json();
+        return data;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    return {
+      loading,
+      error,
+      deleteArticle,
+    };
+  };
+
+ 
 };
 
-export default useArticle;
+export default useArticleApi;
