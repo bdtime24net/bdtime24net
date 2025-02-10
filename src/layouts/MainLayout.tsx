@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import TopNavbar from "@/components/pages/Home/TopNavbar";
+import { ThemeProvider } from "@/providers/ThemeProvider";
+
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -89,11 +92,16 @@ export default async function RootLayout({
 
         <main>
           <div>
+            <ThemeProvider>
             <TopNavbar />
+
             <main className="flex-grow container mx-auto px-4 pt-20">
               {children}
             </main>
+            </ThemeProvider>
           </div>
+          
+          
         </main>
       </body>
     </html>
