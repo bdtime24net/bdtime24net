@@ -65,7 +65,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
 }
 
 export async function generateStaticParams() {
-  const newsData = await getAllArticle(1, 10);
+  const newsData = await getAllArticle(0, 7);
   return newsData.articles.map((article) => {
     id: article.id;
   })

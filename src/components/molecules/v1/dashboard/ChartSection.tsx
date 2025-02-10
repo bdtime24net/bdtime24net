@@ -53,7 +53,7 @@ const ChartSection: React.FC = () => {
 
   return (
     <div className="bg-white shadow rounded-lg p-4">
-      <h3 className="text-lg font-semibold text-gray-900">Sales Overview</h3>
+      <h3 className="text-lg font-semibold text-gray-900">News Overview</h3>
       <Line data={data} options={options} />
     </div>
   );

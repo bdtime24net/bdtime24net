@@ -1,107 +1,192 @@
 'use client';
-import React, { useEffect, useState } from 'react';
-import { Select, message } from 'antd';
-import UserDropdown from '@/components/molecules/v2/UserDropdown';
 
-const { Option } = Select;
-
-interface Tag {
-  id: string;
-  name: string;
-}
+import React, { useState } from 'react';
+import useSWR from 'swr';
+import { Button, Input, message, Table, Modal, Form, Spin } from 'antd';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { useUser } from '@/hooks/useUser';
+import { format } from 'date-fns'; // Import date-fns for formatting dates
 
 interface Category {
   id: string;
   name: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-const TagsAndCategoriesDropdown: React.FC = () => {
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
 
-  // Fetch tags from the database
-  useEffect(() => {
-    const fetchTags = async () => {
-      try {
-        const response = await fetch(`http://localhost:8080/api/tag`); // Tags API endpoint
-        const result = await response.json();
+// Fetcher function with auth token
+const fetcher = async (url: string, token: string | null) => {
+  if (!token) throw new Error('Unauthorized');
 
-        if (result.success && Array.isArray(result.data)) {
-          setTags(result.data);
-        } else {
-          throw new Error('Tags data is not in the expected format');
-        }
-      } catch (error) {
-        message.error('Failed to fetch tags');
-        console.error('Error fetching tags:', error);
-      }
-    };
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch(`http://localhost:8080/api/category`); // Categories API endpoint
-        const result = await response.json();
+  if (!res.ok) throw new Error('Failed to fetch data');
 
-        if (result.success && Array.isArray(result.data)) {
-          setCategories(result.data);
-        } else {
-          throw new Error('Categories data is not in the expected format');
-        }
-      } catch (error) {
-        message.error('Failed to fetch categories');
-        console.error('Error fetching categories:', error);
-      }
-    };
+  return res.json();
+};
 
-    fetchTags();
-    fetchCategories();
-  }, []);
+const CategoryManager: React.FC = () => {
+  const { user, loading: userLoading, error: userError } = useUser();
+  const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
 
-  const handleTagChange = (value: string) => {
-    setSelectedTagId(value);
-    message.success(`Selected Tag ID: ${value}`);
+  const { data, error, mutate } = useSWR<{ success: boolean; data: Category[] }>(
+    token ? [`${API_URL}/category`, token] : null,
+    ([url, token]: [string, string | null]) => fetcher(url, token)
+  );
+
+  const [categoryName, setCategoryName] = useState('');
+  const [editId, setEditId] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
+
+  if (userLoading) return <Spin size="large" />;
+  if (userError || !user) return <div className="text-red-500">Unauthorized</div>;
+
+  // Handle form submission (Create & Update)
+  const handleSubmit = async () => {
+    if (!categoryName.trim()) {
+      message.error('Category name cannot be empty');
+      return;
+    }
+
+    setLoading(true);
+    const url = editId ? `${API_URL}/category/${editId}` : `${API_URL}/category/create`;
+    const method = editId ? 'PUT' : 'POST';
+
+    try {
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ name: categoryName }),
+      });
+
+      const result = await response.json();
+      if (!result.success) throw new Error(result.message || 'Operation failed');
+
+      message.success(editId ? 'Category updated' : 'Category created');
+      setCategoryName('');
+      setEditId(null);
+      setIsModalOpen(false);
+      mutate();
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : 'Failed to process category');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleCategoryChange = (value: string) => {
-    setSelectedCategoryId(value);
-    message.success(`Selected Category ID: ${value}`);
+  // Handle edit
+  const handleEdit = (category: Category) => {
+    setEditId(category.id);
+    setCategoryName(category.name);
+    setIsModalOpen(true);
+  };
+
+  // Handle delete
+  const handleDelete = async (id: string) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/category/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const result = await response.json();
+      if (!result.success) throw new Error(result.message || 'Failed to delete category');
+
+      message.success('Category deleted');
+      mutate();
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : 'Failed to delete category');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (error) return <div className="text-red-500">Failed to load categories</div>;
+  if (!data) return <Spin size="large" />;
+
+  // Helper function to safely parse and format date
+  const safeDateFormat = (date: string) => {
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      return 'Invalid Date'; // Return a default value if the date is invalid
+    }
+    return format(parsedDate, 'dd MMM yyyy, hh:mm a');
   };
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-md max-w-lg mx-auto">
-      <h2 className="text-lg font-medium text-gray-700 mb-4">Select a Tag</h2>
-      <Select
-        value={selectedTagId || undefined}
-        onChange={handleTagChange}
-        placeholder="Select a tag"
-        className="w-full mb-4"
-      >
-        {tags.map((tag) => (
-          <Option key={tag.id} value={tag.id}>
-            {tag.name || 'Unnamed Tag'} {/* Handle empty names */}
-          </Option>
-        ))}
-      </Select>
+    <div className="p-6 max-w-3xl mx-auto bg-white shadow-md rounded-md">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">Manage Categories</h2>
+        <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsModalOpen(true)}>
+          Add Category
+        </Button>
+      </div>
 
-      <h2 className="text-lg font-medium text-gray-700 mb-4">Select a Category</h2>
-      <Select
-        value={selectedCategoryId || undefined}
-        onChange={handleCategoryChange}
-        placeholder="Select a category"
-        className="w-full"
-      >
-        {categories.map((category) => (
-          <Option key={category.id} value={category.id}>
-            {category.name || 'Unnamed Category'} {/* Handle empty names */}
-          </Option>
-        ))}
-      </Select>
+      {/* Categories Table */}
+      <Table
+        dataSource={data.data}
+        rowKey="id"
+        pagination={{ pageSize: 5 }}
+        bordered
+        columns={[
+          {
+            title: 'Category Name',
+            dataIndex: 'name',
+            key: 'name',
+          },
+          {
+            title: 'Created At',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            render: safeDateFormat, // Use the safe date format function
+          },
+          {
+            title: 'Updated At',
+            dataIndex: 'updatedAt',
+            key: 'updatedAt',
+            render: safeDateFormat, // Use the safe date format function
+          },
+          {
+            title: 'Actions',
+            key: 'actions',
+            render: (_, category: Category) => (
+              <div className="flex gap-2">
+                <Button type="primary" icon={<EditOutlined />} onClick={() => handleEdit(category)} />
+                <Button type="default" danger icon={<DeleteOutlined />} onClick={() => handleDelete(category.id)} />
+              </div>
+            ),
+          },
+        ]}
+      />
 
-      <UserDropdown />
+      {/* Create / Edit Modal */}
+      <Modal
+        title={editId ? 'Edit Category' : 'Create Category'}
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        onOk={handleSubmit}
+        confirmLoading={loading}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item label="Category Name">
+            <Input value={categoryName} onChange={(e) => setCategoryName(e.target.value)} />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };
 
-export default TagsAndCategoriesDropdown;
+export default CategoryManager;

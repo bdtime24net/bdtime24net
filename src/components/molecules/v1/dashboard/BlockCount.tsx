@@ -1,11 +1,12 @@
 import React from "react";
+import { useArticlesCount } from "@/hooks/article/useArticlesCount"; // আপনার হুকের পথে আপডেট করুন
 
-interface BlockCountProps {
-  title: string;
-  count: number;
-}
+const BlockCount: React.FC<{ title: string }> = ({ title }) => {
+  const { count, loading, error } = useArticlesCount();
 
-const BlockCount: React.FC<BlockCountProps> = ({ title, count }) => {
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{`Error: ${error.message}`}</div>;
+
   return (
     <div className="bg-white shadow rounded-lg p-4">
       <h3 className="text-lg font-semibold text-gray-900">{title}</h3>

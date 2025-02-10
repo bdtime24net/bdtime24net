@@ -13,7 +13,7 @@ const items = [
     label: "Navigation One",
     children: [
       {
-        key: "1-1",
+        key: "0",
         label: "Item 1",
         type: "group",
         children: [

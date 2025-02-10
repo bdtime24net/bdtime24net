@@ -3,10 +3,14 @@ import { useRouter } from "next/navigation";
 import { useDashboardUser } from "@/hooks/useDashboardUser";
 import MainContent from "./MainContent";
 import BlockCount from "./BlockCount";
+import TagCount from "./TagCount";
+import CategoryCount from './CategoryCount'
 import ChartSection from "./ChartSection";
 import SummaryCard from "./SummaryCard";
 
-export default function Dashboard() {
+export default function Dashboard({
+  
+}) {
   const router = useRouter();
   const { user, loading } = useDashboardUser();
 
@@ -22,9 +26,10 @@ export default function Dashboard() {
       <div className="flex flex-col flex-1 w-0">
         <MainContent>
           <div className="mt-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <BlockCount title="Total Users" count={150} />
-            <BlockCount title="Active Sessions" count={42} />
-            <BlockCount title="Revenue" count={12345} />
+           
+            <BlockCount title="Total Articles Count" />
+            <TagCount  />
+            <CategoryCount />
           </div>
 
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">

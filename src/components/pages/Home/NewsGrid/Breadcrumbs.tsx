@@ -1,28 +1,29 @@
-import { Breadcrumb } from 'antd';
+'use client';
+
+import { Breadcrumb, Spin } from 'antd';
 import Link from 'next/link';
+import useSWR from 'swr';
 import React from 'react';
 
-// Define the category data
-const categories = [
-  "বিজয় দিবস",
-  "সাকিব আল হাসান",
-  "শীত",
-  "মিয়ানমার",
-  "ভারত",
-  "বাংলাদেশ-ওয়েস্ট ইন্ডিজ সিরিজ",
-  "আবহাওয়ার খবর",
-  "নামাজের সময়সূচি",
-  "চাকরির-খবর",
-];
+interface Category {
+  id: string;
+  name: string;
+}
 
-// Breadcrumbs Component
-const Breadcrumbs: React.FC = () => {
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+const CategoriesBreadcrumbs: React.FC = () => {
+  const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/category`, fetcher);
+
+  if (error) return <div className="text-red-500">Failed to load categories</div>;
+  if (isLoading) return <Spin className="py-4" />;
+
   return (
     <div className="py-4">
       <Breadcrumb>
-        {categories.map((category, index) => (
-          <Breadcrumb.Item key={index}>
-            <Link href={`/${category}`}>{category}</Link>
+        {data?.data?.map((category: Category) => (
+          <Breadcrumb.Item key={category.id}>
+            <Link href={`/category/${category.name}`}>{category.name}</Link>
           </Breadcrumb.Item>
         ))}
       </Breadcrumb>
@@ -30,4 +31,4 @@ const Breadcrumbs: React.FC = () => {
   );
 };
 
-export default Breadcrumbs;
+export default CategoriesBreadcrumbs;

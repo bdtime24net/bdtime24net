@@ -6,9 +6,9 @@ import "@/styles/globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Welcome to the blog by Zobkazi",
-  description: "This is the blog by Zobkazi",
-  icons: { icon: "/logos/next-icon.svg" },
+  title: "Welcome to the bdtime24.net",
+  description: "This is the bdtime24.net",
+  icons: { icon: "/bdtime24.net-logo.png" },
 };
 
 export default function AuthLayout({

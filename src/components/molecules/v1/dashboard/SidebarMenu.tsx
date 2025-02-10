@@ -34,65 +34,39 @@ const items: MenuItem[] = [
     label: "Pages",
     icon: <MailOutlined />,
     children: [
-      { key: "5", label: "News", children: [
+      { key: "1", label: "News", children: [
         {
-          key: "4", label: <Link href="/dashboard/news/create">Create News</Link>,
+          key: "0", label: <Link href="/dashboard/news/create">Create News</Link>,
         },
         {
-          key: "3", label: <Link href="/dashboard/news">List News</Link>,
+          key: "1", label: <Link href="/dashboard/news">List News</Link>,
         }, 
         {
           key: "2", label: <Link href="/dashboard/news/create">Edit News</Link>,
         }
       ] },
-      { key: "6", label: "Categories", children: [
+      { key: "2", label: "Categories", children: [
           {
-            key: "8", label: <Link href="/dashboard/categories">List Categories</Link>,
+            key: "0", label: <Link href="/dashboard/categories">List Categories</Link>,
           },
           {
-            key: "7", label: <Link href="/dashboard/categories/create">Create Category</Link>,
+            key: "1", label: <Link href="/dashboard/categories/create">Create Category</Link>,
           }
       ] },
-      { key: "7", label: "Tags", children: [
+      { key: "3", label: "Tags", children: [
         {
-          key: "10", label: <Link href="/dashboard/tags">List Tags</Link>,
+          key: "0", label: <Link href="/dashboard/tags">List Tags</Link>,
          },
         { 
-        key: "9", label: <Link href="/dashboard/tags/create">Create Tag</Link>,
-       },
-       {
-        key: "11", label: <Link href="/dashboard/tags/create">Edit Tag</Link>,
+        key: "1", label: <Link href="/dashboard/tags/create">Create Tag</Link>,
        }
        
       ] },
     ],
-  },
-  {
-    key: "sub2",
-    label: "Categories",
-    icon: <AppstoreOutlined />,
-    children: [
-      { key: "9", label: "Option 9" },
-      { key: "10", label: "Option 10" },
-      {
-        key: "sub3",
-        label: "Submenu",
-        children: [
-          { key: "11", label: "Option 11" },
-          { key: "12", label: "Option 12" },
-        ],
-      },
-    ],
-  },
+  }
 ];
 
 const SidebarMenu: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
-
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
-
   return (
     <div>
       <Menu
