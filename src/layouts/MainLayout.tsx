@@ -95,7 +95,7 @@ export default async function RootLayout({
             <ThemeProvider>
             <TopNavbar />
 
-            <main className="flex-grow container mx-auto px-4 pt-20">
+            <main className="">
               {children}
             </main>
             </ThemeProvider>

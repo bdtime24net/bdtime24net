@@ -1,54 +1,68 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useSearch } from '@/hooks/search/useSearch'; // Use the custom hook
-import { useRouter } from 'next/navigation'; // Next.js router hook
-import { SearchOutlined } from '@ant-design/icons'; // Ant Design Search Icon
-
-
+import React, { useState } from "react";
+import { useSearch } from "@/hooks/search/useSearch"; // Custom hook for searching
+import { useRouter } from "next/navigation"; // Next.js router
+import { SearchOutlined } from "@ant-design/icons"; // Ant Design Search Icon
 
 const SearchComponent: React.FC = () => {
-  const [query, setQuery] = useState<string>(''); // Track the search query
-  const { results, loading, error } = useSearch(query); // Get results, loading, and error from the hook
+  const [query, setQuery] = useState<string>(""); // Search query state
+  const { results, loading, error } = useSearch(query); // Fetch search results
   const router = useRouter(); // Next.js router for navigation
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value); // Update query as the user types
+    setQuery(e.target.value);
   };
 
   const handleClick = (id: string) => {
-    // Navigate to article page on click
     router.push(`/latest/${id}`);
   };
 
   return (
-    <div className="relative">
-      {/* Search input with icon */}
-      <div className="flex items-center border border-gray-300 rounded-md p-2">
-        <SearchOutlined className="text-gray-500" />
+    <form className="max-w-md mx-auto relative">
+      <label htmlFor="search" className="mb-2 text-sm font-medium text-gray-900 sr-only">
+        Search
+      </label>
+      <div className="relative">
+        {/* Search Icon */}
+        <div className="absolute inset-y-0 start-0 flex items-center ps-3">
+          <SearchOutlined className="text-gray-500" />
+        </div>
+
+        {/* Search Input */}
         <input
-          type="text"
+          type="search"
+          id="search"
           value={query}
           onChange={handleSearchChange}
-          placeholder="Search articles..."
-          className="w-60 ml-2 focus:outline-none"
+          className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+          placeholder="নিবন্ধগুলি অনুসন্ধান করুন..."
+          required
         />
+
+        {/* Search Button */}
+        <button
+          type="submit"
+          className="text-white absolute end-2.5 bottom-2.5 bg-purple-400 hover:bg-blue-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-1 lg:px-4 lg:py-2"
+        >
+          Search
+        </button>
       </div>
 
-      {/* Display loading indicator */}
-      {loading && <div className="absolute top-10 left-2 text-sm text-gray-500">Loading...</div>}
+      {/* Loading Indicator */}
+      {loading && <div className="absolute w-full bg-white shadow-md mt-2 p-2 text-sm text-gray-500">Loading...</div>}
 
-      {/* Display error if any */}
-      {error && <div className="absolute top-10 left-2 text-sm text-red-500">{error}</div>}
+      {/* Error Message */}
+      {error && <div className="absolute w-full bg-white shadow-md mt-2 p-2 text-sm text-red-500">{error}</div>}
 
-      {/* Display search results */}
+      {/* Search Results */}
       {results.length > 0 && (
-        <div className="absolute w-72 bg-white shadow-md mt-2 rounded-md">
+        <div className="absolute w-full bg-white shadow-md mt-2 rounded-md max-h-60 overflow-y-auto">
           {results.map((result: any) => (
             <div
               key={result.id}
               className="p-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleClick(result.id)} // Navigate to article
+              onClick={() => handleClick(result.id)}
             >
               <p className="font-semibold">{result.headline}</p>
             </div>
@@ -56,13 +70,13 @@ const SearchComponent: React.FC = () => {
         </div>
       )}
 
-      {/* No results found */}
-      {results.length === 0 && !loading && query.trim() !== '' && (
-        <div className="absolute w-72 bg-white shadow-md mt-2 rounded-md p-2 text-gray-500">
+      {/* No Results Found */}
+      {results.length === 0 && !loading && query.trim() !== "" && (
+        <div className="absolute w-full bg-white shadow-md mt-2 rounded-md p-2 text-gray-500">
           No results found
         </div>
       )}
-    </div>
+    </form>
   );
 };
 

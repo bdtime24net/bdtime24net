@@ -11,7 +11,7 @@ export default async function HomeLayout({
     return (   
             <div>
               <TopNavbar />
-              <main className="flex-grow container mx-auto px-4 pt-20">
+              <main className="">
                 {children}
               </main>
               </div>

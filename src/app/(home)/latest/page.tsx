@@ -1,7 +1,7 @@
 import { getAllArticle } from "@/hooks/article/getAllArticle";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
-
+import { bn } from "date-fns/locale";
 
 export default async function ArticlePage() {
   const page = 1;
@@ -16,15 +16,17 @@ export default async function ArticlePage() {
   const subArticles = newsData.articles.slice(1, 5); // Next 6 articles
 
   return (
+    <div className="mt-24">
+
     <div className="max-w-screen-xl mx-auto p-2 sm:p-2 lg:p-4">
       <div className="grid grid-cols-1 sm:grid-cols-12 gap-6">
         {/* Main Article - Large Feature */}
        
         <div className="sm:col-span-7">
-           <p className="text-sm sm:text-xl md:text-xl lg:text-2xl">আজকের খবর</p>
+           <p className="text-sm bg-purple-300 rounded-sm sm:text-xl md:text-xl lg:text-2xl">আজকের খবর</p>
            <hr className="w-2/2 mx-auto border-t-2 border-gray-600 my-6" />
 
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+          <div className="shadow-lg rounded-lg overflow-hidden">
             <Link href={`/latest/${mainArticle.id}`} className="block">
               <picture>
                 <img
@@ -35,18 +37,18 @@ export default async function ArticlePage() {
               </picture>
             </Link>
             <div className="p-5">
-              <h2 className="text-2xl font-bold text-gray-900 hover:text-indigo-600 transition">
+              <h2 className="text-2xl font-bold  hover:text-indigo-600 transition">
                 <Link href={`/latest/${mainArticle.id}`}>{mainArticle.headline}</Link>
               </h2>
-              <p className="text-gray-600 mt-2 text-sm line-clamp-3">{mainArticle.description}</p>
+              <p className=" mt-2 text-sm line-clamp-3">{mainArticle.description}</p>
               <div className="text-gray-700 text-sm mt-2 flex justify-between">
                 <Link href={`/latest/${mainArticle.id}`} className="text-blue-500 font-medium">
-                  Read More
+                আরও বিস্তারিত!
                 </Link>
               </div>
               <section className="text-sm text-gray-600 mb-6">
         <span className="text-gray-500">
-          {formatDistanceToNow(new Date(mainArticle.publishedAt), { addSuffix: true })}
+          {formatDistanceToNow(new Date(mainArticle.publishedAt), { addSuffix: true, locale: bn })}
         </span>
       </section>
             </div>
@@ -56,7 +58,7 @@ export default async function ArticlePage() {
         {/* Sub Articles - Right Side */}
         <div className="sm:col-span-5 grid grid-cols-1 md:grid-cols-2 gap-5">
           {subArticles.map((article) => (
-            <div key={article.id} className="bg-white shadow-md rounded-lg overflow-hidden">
+            <div key={article.id} className=" shadow-md rounded-lg overflow-hidden">
               <Link href={`/latest/${article.id}`} className="block">
                 <picture>
                   <img
@@ -70,15 +72,16 @@ export default async function ArticlePage() {
                 <h3 className="text-md font-semibold text-gray-900 hover:text-indigo-600 transition">
                   <Link href={`/latest/${article.id}`}>{article.headline}</Link>
                 </h3>
-                <p className="text-xs text-gray-500 mt-1">{article.keywords}</p>
+                <p className="text-xs t mt-1">{article.keywords}</p>
                 <span className="text-gray-500">
-          {formatDistanceToNow(new Date(mainArticle.publishedAt), { addSuffix: true })}
+          {formatDistanceToNow(new Date(mainArticle.publishedAt), { addSuffix: true, locale:bn })}
         </span>
               </div>
             </div>
           ))}
         </div>
       </div>
+    </div>
     </div>
   );
 }

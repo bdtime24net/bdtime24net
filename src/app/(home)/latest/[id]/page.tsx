@@ -65,7 +65,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
         <p>{articleData.description}</p>
       </section>
 
-      <section className="bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full mt-6">
+      <section className="text-sm px-3 py-1 rounded-full mt-6">
         <p>{articleData.keywords}</p>
       </section>
 
