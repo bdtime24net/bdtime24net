@@ -6,7 +6,7 @@ import useSWRMutation from "swr/mutation";
 import { Button, notification } from "antd";
 import Link from "next/link";
 
-const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL as string;
+const next_url = process.env.NEXT_PUBLIC_API_URL as string;
 
 interface SignUpForm {
   username: string;
@@ -15,7 +15,7 @@ interface SignUpForm {
 }
 
 const signUpFetcher = async (_: string, { arg }: { arg: SignUpForm }) => {
-  const response = await fetch(`${NEXT_PUBLIC_API_URL}/auth/signup`, {
+  const response = await fetch(`${next_url}/auth/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(arg),
@@ -31,7 +31,7 @@ const signUpFetcher = async (_: string, { arg }: { arg: SignUpForm }) => {
 const AuthSignUp: React.FC = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<SignUpForm>();
   const router = useRouter();
-  const { trigger, isMutating } = useSWRMutation(`${NEXT_PUBLIC_API_URL}/auth/signup`, signUpFetcher);
+  const { trigger, isMutating } = useSWRMutation(`${next_url}/auth/signup`, signUpFetcher);
 
   const onSubmit = async (data: SignUpForm) => {
     try {
@@ -116,5 +116,7 @@ const AuthSignUp: React.FC = () => {
     </div>
   );
 };
+
+
 
 export default AuthSignUp;

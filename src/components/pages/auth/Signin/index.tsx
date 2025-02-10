@@ -11,10 +11,10 @@ interface SignInForm {
   password: string;
 }
 
-const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL as string;
+const next_url = process.env.NEXT_PUBLIC_API_URL as string;
 
 const signInFetcher = async (_: string, { arg }: { arg: SignInForm }) => {
-  const response = await fetch(`${NEXT_PUBLIC_API_URL}/auth/signin`, {
+  const response = await fetch(`${next_url}/auth/signin`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -33,7 +33,7 @@ const AuthSignIn: React.FC = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<SignInForm>();
   const router = useRouter();
 
-  const { trigger, isMutating } = useSWRMutation(`${NEXT_PUBLIC_API_URL}/auth/signin`, signInFetcher);
+  const { trigger, isMutating } = useSWRMutation(`${next_url}/auth/signin`, signInFetcher);
 
   const onSubmit = async (data: SignInForm) => {
     try {
