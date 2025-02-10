@@ -15,18 +15,31 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 const CategoriesBreadcrumbs: React.FC = () => {
   const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/category`, fetcher);
 
-  if (error) return <div className="text-red-500">Failed to load categories</div>;
-  if (isLoading) return <Spin className="py-4" />;
+  if (error) return <div className="text-red-500 text-center">⚠ Failed to load categories</div>;
+  if (isLoading) return <div className="flex justify-center py-4"><Spin /></div>;
+
+  const categories = data?.data?.slice(0, Math.max(1, Math.min(data?.data?.length || 0, 10))) || [];
 
   return (
-    <div className="py-4">
-      <Breadcrumb>
-        {data?.data?.map((category: Category) => (
-          <Breadcrumb.Item key={category.id}>
-            <Link href={`/category/${category.name}`}>{category.name}</Link>
-          </Breadcrumb.Item>
-        ))}
-      </Breadcrumb>
+    <div className="py-4 px-4">
+      <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap">
+        <span className="text-lg font-semibold bg-purple-500  rounded px-3 py-1">
+          ট্রেন্ডিং:
+        </span>
+
+        <Breadcrumb className="flex gap-2">
+          {categories.map((category: Category) => (
+            <Breadcrumb.Item key={category.id}>
+              <Link 
+                href={`/category/${category.name}`} 
+                className="transition duration-200"
+              >
+                <samp className=' dark:text-purple-500'>{category.name}</samp>
+              </Link>
+            </Breadcrumb.Item>
+          ))}
+        </Breadcrumb>
+      </div>
     </div>
   );
 };
