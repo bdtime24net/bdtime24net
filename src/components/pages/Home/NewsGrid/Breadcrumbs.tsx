@@ -25,7 +25,7 @@ const CategoriesBreadcrumbs: React.FC = () => {
       <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap">
         <span className="text-lg font-semibold bg-purple-500  rounded px-3 py-1">
           ট্রেন্ডিং:
-        </span>
+        </span><hr className=" mx-auto border-t-2 border-gray-600 my-6" />
 
         <Breadcrumb className="flex gap-2">
           {categories.map((category: Category) => (

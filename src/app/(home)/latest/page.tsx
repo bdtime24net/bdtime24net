@@ -16,12 +16,13 @@ export default async function ArticlePage() {
   const subArticles = newsData.articles.slice(1, 5); // Next 6 articles
 
   return (
-    <div className="mt-24">
+    <div className="">
 
     <div className="max-w-screen-xl mx-auto p-2 sm:p-2 lg:p-4">
       <div className="grid grid-cols-1 sm:grid-cols-12 gap-6">
         {/* Main Article - Large Feature */}
-       
+        
+
         <div className="sm:col-span-7">
            <p className="text-sm bg-purple-300 rounded-sm sm:text-xl md:text-xl lg:text-2xl">আজকের খবর</p>
            <hr className="w-2/2 mx-auto border-t-2 border-gray-600 my-6" />
